@@ -2,7 +2,6 @@ def is_invalid_id(num):
     s = str(num)
     length = len(s)
 
-    # Must have even length to be repeated twice
     if length % 2 != 0:
         return False
 
@@ -29,13 +28,9 @@ def is_invalid_id_part2(num):
     s = str(num)
     length = len(s)
 
-    # Try all possible pattern lengths (from 1 to length//2)
-    # Pattern must repeat at least twice, so max pattern length is length//2
     for pattern_len in range(1, length // 2 + 1):
-        # Check if the length is divisible by the pattern length
         if length % pattern_len == 0:
             pattern = s[:pattern_len]
-            # Check if repeating this pattern gives us the full number
             if pattern * (length // pattern_len) == s:
                 return True
     return False
