@@ -4,6 +4,7 @@ Markdown generation utilities for benchmark results and statistics.
 from pathlib import Path
 from datetime import datetime
 from .time_utils import format_time
+from .hardware_info import format_hardware_info
 
 
 class MarkdownGenerator:
@@ -85,6 +86,9 @@ class MarkdownGenerator:
         output.append(f"- 🚀 **Fastest Time**: {format_time(year_summary['fastest_time_ms'])}")
         output.append(f"- 🐌 **Slowest Time**: {format_time(year_summary['slowest_time_ms'])}")
         output.append("")
+
+        # Hardware Information
+        output.append(format_hardware_info())
 
         # Detailed table
         output.append("## Performance by Day")

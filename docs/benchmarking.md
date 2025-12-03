@@ -282,6 +282,58 @@ python benchmark_quick.py thorough 2025 2  # If day 2 was slow
 4. **Start with fast presets** before doing detailed analysis
 5. **Save results** to track improvements over time
 
+## Hardware Information
+
+All year-specific benchmark result markdown files automatically include hardware information to provide context for the performance measurements. This includes:
+
+- **Operating System**: OS name and version
+- **Python Version**: Python interpreter version used
+- **Processor**: CPU model and specifications
+- **CPU Cores**: Number of available CPU cores
+
+### Example Output
+
+```markdown
+## 💻 System Information
+
+- **OS**: Windows 11
+- **Python**: 3.12.10
+- **Processor**: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
+- **CPU Cores**: 24
+```
+
+### Viewing Hardware Info
+
+To see your system's hardware information:
+
+```bash
+python -c "from utils.hardware_info import format_hardware_info; print(format_hardware_info())"
+```
+
+Or run the demo script:
+
+```bash
+python utils/demo_hardware_info.py
+```
+
+This information is automatically included when you generate or update markdown files:
+
+```bash
+# Update year results (includes hardware info)
+python main.py --markdown-year 2025
+
+# Update all markdown files
+python main.py --markdown-all
+```
+
+### Why Hardware Info Matters
+
+Hardware information helps you:
+- **Compare results** across different machines
+- **Share benchmarks** with meaningful context
+- **Track performance** as you upgrade hardware
+- **Document environment** for reproducibility
+
 ## Integration with Tracking
 
 The benchmark system integrates with the existing performance tracking:

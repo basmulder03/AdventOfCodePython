@@ -97,6 +97,7 @@ Example:
 
 Each year file includes:
 - Year summary statistics
+- **System/Hardware information** (OS, Python version, CPU details)
 - Performance by day table (with star indicators)
 - Performance distribution (fast/medium/slow)
 - Links back to main README
@@ -224,6 +225,36 @@ Solutions are categorized by speed:
 ### Timestamps
 
 All generated files include a "Last updated" timestamp showing when they were generated.
+
+### Hardware Information
+
+Year-specific result files automatically include system information to provide context for benchmark results:
+
+```markdown
+## 💻 System Information
+
+- **OS**: Windows 11
+- **Python**: 3.12.10
+- **Processor**: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
+- **CPU Cores**: 24
+```
+
+This information is collected automatically when markdown files are generated and helps with:
+- Comparing performance across different machines
+- Understanding the context of benchmark results
+- Documenting the environment for reproducibility
+
+To view your system's hardware information:
+
+```bash
+python -c "from utils.hardware_info import format_hardware_info; print(format_hardware_info())"
+```
+
+Or use the demo script:
+
+```bash
+python utils/demo_hardware_info.py
+```
 
 ## Tips and Best Practices
 

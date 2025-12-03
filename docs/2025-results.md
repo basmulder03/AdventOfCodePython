@@ -11,6 +11,13 @@
 - 🚀 **Fastest Time**: 556.5μs
 - 🐌 **Slowest Time**: 771.9ms
 
+## 💻 System Information
+
+- **OS**: Windows 11
+- **Python**: 3.12.10
+- **Processor**: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
+- **CPU Cores**: 24
+
 ## Performance by Day
 
 | Day | Part 1 | Part 2 | Total | Status |
@@ -25,4 +32,4 @@
 - ⚡ **Medium** (10ms - 1s): 2 problems
 - 🐌 **Slow** (≥ 1s): 0 problems
 
-*Last updated: 2025-12-03 19:10:05*
+*Last updated: 2025-12-03 19:26:00*
