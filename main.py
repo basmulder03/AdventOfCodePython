@@ -465,6 +465,68 @@ def show_statistics(tracker: AOCTracker, year: int = None) -> None:
     print("=" * 60)
 
 
+def sync_completed_problems(submitter: AOCSubmitter, tracker: AOCTracker, year: int) -> None:
+    """Sync completed problems from AOC website for the specified year."""
+    if COLOR_SUPPORT:
+        print(f"{Fore.CYAN}{Style.BRIGHT}🔄 Syncing completed problems for {year}...{Style.RESET_ALL}")
+    else:
+        print(f"🔄 Syncing completed problems for {year}...")
+
+    print(f"Fetching completion data from adventofcode.com...")
+
+    # Get completed problems from AOC website
+    completed_data = submitter.sync_completed_problems(year)
+
+    if not completed_data:
+        if COLOR_SUPPORT:
+            print(f"{Fore.YELLOW}⚠️  No completed problems found for {year}{Style.RESET_ALL}")
+        else:
+            print(f"⚠️  No completed problems found for {year}")
+        return
+
+    # Show what was found
+    total_parts = sum(len(day_data['completed_parts']) for day_data in completed_data.values())
+    days_with_answers = sum(1 for day_data in completed_data.values() if day_data['answers'])
+
+    if COLOR_SUPPORT:
+        print(f"{Fore.GREEN}📊 Found {total_parts} completed parts across {len(completed_data)} days{Style.RESET_ALL}")
+        if days_with_answers > 0:
+            print(f"{Fore.BLUE}💡 Found actual answers for {days_with_answers} days{Style.RESET_ALL}")
+    else:
+        print(f"📊 Found {total_parts} completed parts across {len(completed_data)} days")
+        if days_with_answers > 0:
+            print(f"💡 Found actual answers for {days_with_answers} days")
+
+    # Show detailed breakdown
+    for day in sorted(completed_data.keys()):
+        day_data = completed_data[day]
+        parts_str = ", ".join(f"Part {p}" for p in sorted(day_data['completed_parts']))
+        answers_info = ""
+        if day_data['answers']:
+            answers_info = f" (answers: {', '.join(f'P{k}: {v}' for k, v in day_data['answers'].items())})"
+
+        if COLOR_SUPPORT:
+            print(f"  {Fore.WHITE}Day {day}: {parts_str}{Fore.CYAN}{answers_info}{Style.RESET_ALL}")
+        else:
+            print(f"  Day {day}: {parts_str}{answers_info}")
+
+    # Sync to database
+    new_answers_count = tracker.sync_completed_problems(year, completed_data)
+
+    if COLOR_SUPPORT:
+        print(f"\n{Fore.GREEN}✅ Sync completed!{Style.RESET_ALL}")
+        print(f"{Fore.BLUE}📈 Added {new_answers_count} new correct answers to database{Style.RESET_ALL}")
+    else:
+        print(f"\n✅ Sync completed!")
+        print(f"📈 Added {new_answers_count} new correct answers to database")
+
+    if new_answers_count > 0:
+        if COLOR_SUPPORT:
+            print(f"{Fore.YELLOW}💡 You can now see these in statistics with --stats{Style.RESET_ALL}")
+        else:
+            print(f"💡 You can now see these in statistics with --stats")
+
+
 def update_readme_with_stats(tracker: AOCTracker) -> None:
     """Update README.md with the latest statistics."""
     readme_path = Path.cwd() / "README.md"
@@ -528,6 +590,8 @@ def setup_argument_parser() -> argparse.ArgumentParser:
                        help="update README.md with latest statistics")
     parser.add_argument("--year-filter", type=int,
                        help="filter stats by specific year (used with --stats)")
+    parser.add_argument("--sync", type=int,
+                       help="sync already completed problems from AOC website for specified year")
     return parser
 
 
@@ -539,6 +603,23 @@ def main() -> None:
     # Initialize tracking and submission
     tracker = None if args.no_tracking else AOCTracker()
     submitter = AOCSubmitter() if args.submit else None
+
+    # Handle sync operation
+    if args.sync:
+        if not tracker:
+            print("Sync requires tracking to be enabled (remove --no-tracking)")
+            return
+
+        # Need submitter for fetching data from AOC website
+        if not submitter:
+            submitter = AOCSubmitter()
+
+        if not submitter.is_configured():
+            print("Session cookie is required for syncing. Please add your session cookie to session_cookie.txt")
+            return
+
+        sync_completed_problems(submitter, tracker, args.sync)
+        return
 
     # Handle stats generation
     if args.stats or args.update_readme:

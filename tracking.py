@@ -355,3 +355,61 @@ class AOCTracker:
             cursor.execute("SELECT DISTINCT year FROM runs ORDER BY year DESC")
             return [row[0] for row in cursor.fetchall()]
 
+    def sync_completed_problems(self, year: int, completed_data: dict) -> int:
+        """
+        Sync completed problems from AOC website into the database.
+
+        Args:
+            year: Year to sync
+            completed_data: Dict from submitter.sync_completed_problems()
+
+        Returns:
+            Number of new correct answers added
+        """
+        new_answers_count = 0
+
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+
+            for day, day_data in completed_data.items():
+                completed_parts = day_data['completed_parts']
+                answers = day_data['answers']
+
+                for part in completed_parts:
+                    # Check if we already have this correct answer
+                    cursor.execute("""
+                        SELECT answer FROM correct_answers 
+                        WHERE year = ? AND day = ? AND part = ?
+                    """, (year, day, part))
+
+                    existing = cursor.fetchone()
+                    answer = answers.get(part, f"[COMPLETED-{year}-{day}-{part}]")
+
+                    if not existing:
+                        # Add new correct answer
+                        cursor.execute("""
+                            INSERT INTO correct_answers (year, day, part, answer)
+                            VALUES (?, ?, ?, ?)
+                        """, (year, day, part, answer))
+                        new_answers_count += 1
+
+                        # Also add a submission record to show it was completed
+                        cursor.execute("""
+                            INSERT OR IGNORE INTO submissions 
+                            (year, day, part, timestamp, answer, status, response_message, wait_until)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        """, (year, day, part, datetime.now(), answer, 'correct',
+                              'Synced from AOC website - already completed', None))
+
+                    elif existing[0] != answer and answer != f"[COMPLETED-{year}-{day}-{part}]":
+                        # Update if we found the actual answer and it's different
+                        cursor.execute("""
+                            UPDATE correct_answers 
+                            SET answer = ? 
+                            WHERE year = ? AND day = ? AND part = ?
+                        """, (answer, year, day, part))
+
+            conn.commit()
+
+        return new_answers_count
+
