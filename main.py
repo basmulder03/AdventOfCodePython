@@ -5,6 +5,13 @@ from time import perf_counter
 import os
 from input import get_input
 
+try:
+    from colorama import init, Fore, Style
+    init(autoreset=True)
+    COLOR_SUPPORT = True
+except ImportError:
+    COLOR_SUPPORT = False
+
 
 def main():
     # Parse the command-line arguments
@@ -36,7 +43,17 @@ def main():
 
     # Get the input data for the specified day
     input_data = get_input(args.year, args.day)
+
+    # Print header
+    print("\n" + "=" * 60)
+    if COLOR_SUPPORT:
+        print(f"{Fore.CYAN}{Style.BRIGHT}🎄 Advent of Code {args.year} - Day {args.day} 🎄{Style.RESET_ALL}")
+    else:
+        print(f"Advent of Code {args.year} - Day {args.day}")
+    print("=" * 60 + "\n")
+
     total_time = 0
+
     try:
         # Measure the elapsed time for solving Part 1
         start_time = perf_counter()
@@ -45,11 +62,21 @@ def main():
         elapsed_time = end_time - start_time
 
         # Print the result and elapsed time for Part 1
-        print(f"Part 1: {result_1}")
-        print(f"Elapsed time: {elapsed_time} seconds")
+        if COLOR_SUPPORT:
+            print(f"{Fore.YELLOW}{Style.BRIGHT}⭐ Part 1:{Style.RESET_ALL}")
+            print(f"  {Fore.GREEN}Answer: {Style.BRIGHT}{result_1}{Style.RESET_ALL}")
+            print(f"  {Fore.BLUE}Time: {elapsed_time * 1000:.3f} ms{Style.RESET_ALL}")
+        else:
+            print(f"Part 1:")
+            print(f"  Answer: {result_1}")
+            print(f"  Time: {elapsed_time * 1000:.3f} ms")
+        print()
         total_time += elapsed_time
     except Exception as e:
-        print(e)
+        if COLOR_SUPPORT:
+            print(f"{Fore.RED}❌ Part 1 Error: {e}{Style.RESET_ALL}\n")
+        else:
+            print(f"Part 1 Error: {e}\n")
 
     try:
         # Measure the elapsed time for solving Part 2
@@ -59,13 +86,29 @@ def main():
         elapsed_time = end_time - start_time
 
         # Print the result and elapsed time for Part 2
-        print(f"Part 2: {result_2}")
-        print(f"Elapsed time: {elapsed_time} seconds")
+        if COLOR_SUPPORT:
+            print(f"{Fore.YELLOW}{Style.BRIGHT}⭐ Part 2:{Style.RESET_ALL}")
+            print(f"  {Fore.GREEN}Answer: {Style.BRIGHT}{result_2}{Style.RESET_ALL}")
+            print(f"  {Fore.BLUE}Time: {elapsed_time * 1000:.3f} ms{Style.RESET_ALL}")
+        else:
+            print(f"Part 2:")
+            print(f"  Answer: {result_2}")
+            print(f"  Time: {elapsed_time * 1000:.3f} ms")
+        print()
         total_time += elapsed_time
     except Exception as e:
-        print(e)
-    
-    print(f"Total took {total_time * 1000} milliseconds")
+        if COLOR_SUPPORT:
+            print(f"{Fore.RED}❌ Part 2 Error: {e}{Style.RESET_ALL}\n")
+        else:
+            print(f"Part 2 Error: {e}\n")
+
+    # Print footer with total time
+    print("-" * 60)
+    if COLOR_SUPPORT:
+        print(f"{Fore.MAGENTA}{Style.BRIGHT}⏱️  Total Time: {total_time * 1000:.3f} ms{Style.RESET_ALL}")
+    else:
+        print(f"Total Time: {total_time * 1000:.3f} ms")
+    print("=" * 60 + "\n")
 
 
 if __name__ == "__main__":
