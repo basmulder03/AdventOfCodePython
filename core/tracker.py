@@ -376,6 +376,41 @@ class AOCTracker:
             cursor.execute("SELECT DISTINCT year FROM runs ORDER BY year DESC")
             return [row[0] for row in cursor.fetchall()]
 
+    def get_completion_status(self, year: int) -> Dict[int, Dict[int, bool]]:
+        """
+        Get completion status for all days and parts in a year.
+
+        Returns:
+            Dict mapping day -> part -> is_correct (True if correct answer exists, False if only attempted)
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+
+            # Get all correct answers for the year
+            cursor.execute("""
+                SELECT day, part FROM correct_answers
+                WHERE year = ?
+            """, (year,))
+            correct = {(row[0], row[1]) for row in cursor.fetchall()}
+
+            # Get all attempted parts (with successful runs)
+            cursor.execute("""
+                SELECT DISTINCT day, part FROM runs
+                WHERE year = ? AND success = 1
+            """, (year,))
+            attempted = {(row[0], row[1]) for row in cursor.fetchall()}
+
+            # Build the status dict
+            status = {}
+            all_parts = correct | attempted
+
+            for day, part in all_parts:
+                if day not in status:
+                    status[day] = {}
+                status[day][part] = (day, part) in correct
+
+            return status
+
     def sync_completed_problems(self, year: int, completed_data: dict) -> int:
         """
         Sync completed problems from AOC website into the database.

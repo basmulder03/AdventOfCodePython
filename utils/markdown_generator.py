@@ -58,8 +58,9 @@ class MarkdownGenerator:
         """Generate detailed statistics for a specific year."""
         year_summary = self.tracker.get_year_summary(year)
         best_times = self.tracker.get_best_times_by_year(year)
+        completion_status = self.tracker.get_completion_status(year)
 
-        if not best_times:
+        if not best_times and not completion_status:
             return f"No performance data available for {year}."
 
         # Group by day
@@ -96,8 +97,12 @@ class MarkdownGenerator:
         output.append("| Day | Part 1 | Part 2 | Total | Status |")
         output.append("|-----|--------|--------|-------|--------|")
 
-        for day in sorted(days_data.keys()):
-            day_data = days_data[day]
+        # Include all days that have been attempted
+        all_days = set(days_data.keys()) | set(completion_status.keys())
+
+        for day in sorted(all_days):
+            day_data = days_data.get(day, {})
+            day_status = completion_status.get(day, {})
 
             # Part 1
             if 1 in day_data:
@@ -115,17 +120,38 @@ class MarkdownGenerator:
                 part2_time = "—"
                 part2_result = ""
 
-            # Total
+            # Determine status based on correct answers
+            part1_correct = day_status.get(1, False)
+            part2_correct = day_status.get(2, False)
+            part1_attempted = 1 in day_data
+            part2_attempted = 2 in day_data
+
+            # Build status string
+            if part1_correct and part2_correct:
+                status = "⭐⭐"
+            elif part1_correct:
+                status = "⭐" + ("☆" if part2_attempted else "")
+            elif part2_correct:
+                status = ("☆" if part1_attempted else "") + "⭐"
+            elif part1_attempted and part2_attempted:
+                status = "☆☆"
+            elif part1_attempted:
+                status = "☆"
+            elif part2_attempted:
+                status = "☆"
+            else:
+                status = "—"
+
+            # Total time
             if 1 in day_data and 2 in day_data:
                 total_time = day_data[1]['best_time_ms'] + day_data[2]['best_time_ms']
                 total_str = format_time(total_time)
-                status = "⭐⭐"
-            elif 1 in day_data or 2 in day_data:
-                total_str = part1_time if 1 in day_data else part2_time
-                status = "⭐"
+            elif 1 in day_data:
+                total_str = part1_time
+            elif 2 in day_data:
+                total_str = part2_time
             else:
                 total_str = "—"
-                status = "—"
 
             output.append(f"| {day:2d} | {part1_time:>7} | {part2_time:>7} | {total_str:>7} | {status} |")
 

@@ -1,4 +1,4 @@
-# 🎄 Advent of Code 2025 Results
+# 🎄 Advent of Code 2021 Results
 
 [← Back to Overview](../README.md)
 
@@ -6,10 +6,10 @@
 
 - ⭐ **Stars**: 6
 - 🧩 **Problems Solved**: 6
-- 🏃 **Total Runs**: 89 (96.6% success)
-- ⚡ **Average Time**: 123.4ms
-- 🚀 **Fastest Time**: 556.5μs
-- 🐌 **Slowest Time**: 771.9ms
+- 🏃 **Total Runs**: 70 (85.7% success)
+- ⚡ **Average Time**: 399.6μs
+- 🚀 **Fastest Time**: 192.7μs
+- 🐌 **Slowest Time**: 1.1ms
 
 ## 💻 System Information
 
@@ -22,14 +22,14 @@
 
 | Day | Part 1 | Part 2 | Total | Status |
 |-----|--------|--------|-------|--------|
-|  1 | 556.5μs | 710.4μs |   1.3ms | ⭐⭐ |
-|  2 | 218.6ms | 610.3ms | 828.9ms | ⭐⭐ |
-|  3 |   1.7ms |   1.6ms |   3.3ms | ⭐⭐ |
+|  1 | 192.7μs | 253.1μs | 445.8μs | ⭐⭐ |
+|  2 | 355.3μs | 234.8μs | 590.1μs | ⭐⭐ |
+|  3 | 836.2μs | 250.0μs |   1.1ms | ⭐⭐ |
 
 ## Performance Distribution
 
-- 🚀 **Fast** (< 10ms): 4 problems
-- ⚡ **Medium** (10ms - 1s): 2 problems
+- 🚀 **Fast** (< 10ms): 6 problems
+- ⚡ **Medium** (10ms - 1s): 0 problems
 - 🐌 **Slow** (≥ 1s): 0 problems
 
 *Last updated: 2025-12-03 22:00:53*
