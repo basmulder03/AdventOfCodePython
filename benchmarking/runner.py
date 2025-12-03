@@ -40,34 +40,13 @@ except ImportError:
     Fore = _DummyFore()
     Style = _DummyStyle()
 
-from input import get_input
-from tracking import AOCTracker
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-
-@dataclass
-class BenchmarkResult:
-    """Single benchmark run result."""
-    year: int
-    day: int
-    part: int
-    success: bool
-    result: Any
-    execution_time: float  # in seconds
-    error_message: Optional[str] = None
-
-
-@dataclass
-class BenchmarkStats:
-    """Statistics for multiple benchmark runs."""
-    runs: int
-    success_count: int
-    success_rate: float
-    min_time: float
-    max_time: float
-    mean_time: float
-    median_time: float
-    std_dev: float
-    times: List[float]  # All successful run times
+from core.input_handler import get_input
+from core.tracker import AOCTracker
+from .results import BenchmarkResult, BenchmarkStats
 
 
 class BenchmarkRunner:

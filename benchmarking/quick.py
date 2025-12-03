@@ -8,11 +8,11 @@ import argparse
 import sys
 from pathlib import Path
 
-# Add the parent directory to the path so we can import from main
-sys.path.insert(0, str(Path(__file__).parent))
+# Add the parent directory to the path so we can import from core
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from benchmark import BenchmarkRunner
-from tracking import AOCTracker
+from .runner import BenchmarkRunner
+from core.tracker import AOCTracker
 
 def quick_benchmark():
     """Quick benchmark utility with preset scenarios."""
