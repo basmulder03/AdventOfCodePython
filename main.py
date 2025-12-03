@@ -605,7 +605,7 @@ def setup_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("--part", "-p", type=int, choices=[1, 2],
                        help="run only specific part (1 or 2)")
     parser.add_argument("--submit", action="store_true",
-                       help="submit the answer to AOC (only for actual input)")
+                       help="submit the answer to AOC (requires --part, only for actual input)")
     parser.add_argument("--no-tracking", action="store_true",
                        help="disable run tracking and performance comparison")
     parser.add_argument("--history", action="store_true",
@@ -672,6 +672,15 @@ def main() -> None:
     # Validate required arguments for solution running
     if args.year is None or args.day is None:
         parser.print_help()
+        return
+
+    # Validate submission requirements
+    if args.submit and args.part is None:
+        if COLOR_SUPPORT:
+            print(f"{Fore.RED}❌ Submission requires specifying a single part with --part 1 or --part 2{Style.RESET_ALL}")
+        else:
+            print("❌ Submission requires specifying a single part with --part 1 or --part 2")
+        print("Example: python main.py 2025 3 --part 1 --submit")
         return
 
     try:

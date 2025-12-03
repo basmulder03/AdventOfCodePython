@@ -119,22 +119,37 @@ def solve_part_2(input_data: str) -> Any:
 <!-- STATS_START -->
 ## 🎄 Overall Statistics
 
-**Summary Across All Years (2015-2015):**
+**Summary Across All Years (2015-2025):**
 - ⭐ Total Stars: 44
-- 🧩 Total Problems Solved: 42
-- 🏃 Total Runs: 46 (100.0% success)
-- ⚡ Average Time: 360.3ms
+- 🧩 Total Problems Solved: 44
+- 🏃 Total Runs: 51 (100.0% success)
+- ⚡ Average Time: 325.3ms
 - 🚀 Fastest Time: 0.090ms
 - 🐌 Slowest Time: 6.18s
 
+
+## 2025 Statistics
+
+**Year Summary:**
+- ⭐ Stars: 0
+- 🧩 Problems Solved: 2
+- 🏃 Total Runs: 4 (100.0% success)
+- ⚡ Average Time: 2.6ms
+- 🚀 Fastest Time: 1.7ms
+
+**Best Times by Day:**
+
+| Day | Part 1 | Part 2 | Total |
+|-----|--------|--------|-------|
+|  3 |   1.7ms |   2.3ms |   4.0ms |
 
 ## 2015 Statistics
 
 **Year Summary:**
 - ⭐ Stars: 42
 - 🧩 Problems Solved: 42
-- 🏃 Total Runs: 46 (100.0% success)
-- ⚡ Average Time: 360.3ms
+- 🏃 Total Runs: 47 (100.0% success)
+- ⚡ Average Time: 352.7ms
 - 🚀 Fastest Time: 0.090ms
 
 **Best Times by Day:**
@@ -163,7 +178,7 @@ def solve_part_2(input_data: str) -> Any:
 | 20 |   2.16s |   6.18s |   8.34s |
 | 21 |   1.5ms |   2.6ms |   4.1ms |
 
-*Last updated: 2025-12-03 12:38:55*
+*Last updated: 2025-12-03 14:23:52*
 <!-- STATS_END -->
 
 ## Performance Tracking
