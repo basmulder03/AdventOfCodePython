@@ -42,6 +42,10 @@ def get_input(year: int, day: int, sample: bool = False) -> str:
         session.cookies.update({
             "session": session_cookie
         })
+        # Set a proper user agent with GitHub repo to make Eric happy
+        session.headers.update({
+            "User-Agent": "https://github.com/basmulder03/AdventOfCodePython"
+        })
         response = session.get(
             f"https://adventofcode.com/{year}/day/{day}/input")
         if response.status_code == 403:
@@ -50,6 +54,10 @@ def get_input(year: int, day: int, sample: bool = False) -> str:
                 "Your session cookie is no longer valid. Please enter a new one: ")
             session.cookies.update({
                 "session": new_cookie
+            })
+            # Ensure user agent is still set for retry request
+            session.headers.update({
+                "User-Agent": "https://github.com/basmulder03/AdventOfCodePython"
             })
             response = session.get(
                 f"https://adventofcode.com/{year}/day/{day}/input")
