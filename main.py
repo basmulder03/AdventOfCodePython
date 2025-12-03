@@ -167,14 +167,27 @@ def run_part(module: Any, part_num: int, input_data: str, year: int, day: int,
 
         elapsed_time = end_time - start_time
 
+        # Determine if this run should be considered successful for tracking
+        is_successful = False
+        if tracker and result is not None:
+            # Check if we have a known correct answer
+            correct_answer = tracker.get_correct_answer(year, day, part_num)
+            if correct_answer is not None:
+                # We know the correct answer, so only successful if it matches
+                is_successful = str(result) == correct_answer
+            else:
+                # No known correct answer yet, so we'll consider any non-None result as potentially successful
+                # This will be updated when we get submission feedback
+                is_successful = True
+
         # Track the run
         if tracker:
             tracker.record_run(year, day, part_num, elapsed_time, result,
-                             input_data, code_content, True)
+                             input_data, code_content, is_successful)
 
-            # Get performance comparison
+            # Get performance comparison (only for successful runs)
             perf_data = tracker.get_performance_comparison(year, day, part_num,
-                                                         elapsed_time, code_content)
+                                                         elapsed_time, code_content) if is_successful else None
         else:
             perf_data = None
 

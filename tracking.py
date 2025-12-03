@@ -175,6 +175,21 @@ class AOCTracker:
                     VALUES (?, ?, ?, ?)
                 """, (year, day, part, answer))
 
+                # Update previous runs with the same result to be marked as successful
+                cursor.execute("""
+                    UPDATE runs 
+                    SET success = 1 
+                    WHERE year = ? AND day = ? AND part = ? AND result = ? AND success = 0
+                """, (year, day, part, answer))
+
+            # If incorrect, mark runs with the same result as unsuccessful
+            elif status == 'incorrect':
+                cursor.execute("""
+                    UPDATE runs 
+                    SET success = 0 
+                    WHERE year = ? AND day = ? AND part = ? AND result = ?
+                """, (year, day, part, answer))
+
             conn.commit()
 
     def get_correct_answer(self, year: int, day: int, part: int) -> Optional[str]:
