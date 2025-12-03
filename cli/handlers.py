@@ -78,7 +78,7 @@ For more examples: python benchmarking/quick.py --examples
         """
         print(help_text)
 
-    def handle_sync(self, submitter: AOCSubmitter, tracker: AOCTracker, year: int) -> None:
+    def handle_sync(self, submitter: AOCSubmitter, tracker: AOCTracker, year: int, download_puzzle: bool = False) -> None:
         """Sync completed problems from AOC website for the specified year."""
         print(f"🔄 Syncing completed problems for {year}...")
         print(f"Fetching completion data from adventofcode.com...")
@@ -107,6 +107,7 @@ For more examples: python benchmarking/quick.py --examples
                 answers_info = f" (answers: {', '.join(f'P{k}: {v}' for k, v in day_data['answers'].items())})"
 
             print(f"  Day {day}: {parts_str}{answers_info}")
+
 
         # Sync to database
         new_answers_count = tracker.sync_completed_problems(year, completed_data)

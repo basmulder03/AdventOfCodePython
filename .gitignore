@@ -3,3 +3,4 @@ input/
 session_cookie.txt
 .idea/
 .vscode/
+.puzzle_html/

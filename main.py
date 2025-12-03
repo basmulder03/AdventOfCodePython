@@ -165,8 +165,22 @@ def main() -> None:
         parser.print_help()
         return
 
+    # Check if puzzle HTML needs to be downloaded
+    from pathlib import Path
+
+    # Determine which part to check for
+    part_to_check = args.part if args.part else 1
+    puzzle_part_file = Path.cwd() / ".puzzle_html" / str(args.year) / f"day{args.day}" / f"part{part_to_check}.txt"
+
+    # Auto-download if the file doesn't exist
+    needs_download = not puzzle_part_file.exists()
+
     # Initialize submitter only if needed
-    submitter = AOCSubmitter() if args.submit else None
+    submitter = AOCSubmitter() if (args.submit or needs_download) else None
+
+    # Download puzzle HTML if needed (silently)
+    if needs_download and submitter and submitter.is_configured():
+        submitter.download_puzzle_html(args.year, args.day)
 
     # Validate submission requirements
     if args.submit and args.part is None:

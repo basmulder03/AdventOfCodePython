@@ -184,3 +184,56 @@ class AOCSubmitter:
 
         return sync_results
 
+    def download_puzzle_html(self, year: int, day: int, part: int = None) -> str:
+        """
+        Download puzzle HTML for AI agent context.
+        Stores HTML in .puzzle_html folder (excluded from git).
+
+        Args:
+            year: The AOC year
+            day: The AOC day
+            part: Optional part number (1 or 2). If None, downloads full puzzle page.
+
+        Returns:
+            Path to the day directory if successful, None otherwise
+        """
+        url = f"https://adventofcode.com/{year}/day/{day}"
+
+        try:
+            response = self.session.get(url)
+            response.raise_for_status()
+
+            # Create .puzzle_html directory structure with day subdirectory
+            puzzle_dir = Path.cwd() / ".puzzle_html" / str(year) / f"day{day}"
+            puzzle_dir.mkdir(parents=True, exist_ok=True)
+
+            # Save the full HTML
+            filename = puzzle_dir / "puzzle.html"
+            filename.write_text(response.text, encoding='utf-8')
+
+            # Also extract just the puzzle description for easier reading
+            soup = BeautifulSoup(response.text, 'html.parser')
+            main_content = soup.find('main')
+
+            if main_content:
+                # Extract article elements (puzzle descriptions)
+                articles = main_content.find_all('article', class_='day-desc')
+
+                if articles:
+                    # Save part-specific descriptions
+                    for idx, article in enumerate(articles, 1):
+                        part_filename = puzzle_dir / f"part{idx}.html"
+                        part_filename.write_text(str(article), encoding='utf-8')
+
+                        # Also save as plain text for easier parsing
+                        text_filename = puzzle_dir / f"part{idx}.txt"
+                        plain_text = article.get_text(separator='\n', strip=True)
+                        text_filename.write_text(plain_text, encoding='utf-8')
+
+            return str(puzzle_dir)
+
+        except requests.RequestException as e:
+            return None
+        except Exception as e:
+            return None
+
