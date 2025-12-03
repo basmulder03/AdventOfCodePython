@@ -47,6 +47,33 @@ def main() -> None:
         handlers.handle_sync(submitter, tracker, args.sync)
         return
 
+    # Handle markdown updates
+    if args.update_markdown or args.markdown_all or args.markdown_year or args.markdown_day:
+        if not tracker:
+            print("Markdown updates require tracking to be enabled (remove --no-tracking)")
+            return
+
+        if args.markdown_all:
+            handlers.handle_update_markdown(tracker, update_all=True)
+        elif args.markdown_year:
+            handlers.handle_update_markdown(tracker, year=args.markdown_year)
+        elif args.markdown_day:
+            if args.year is None or args.day is None:
+                print("❌ --markdown-day requires year and day arguments")
+                print("Example: python main.py 2025 1 --markdown-day")
+                return
+            handlers.handle_update_markdown(tracker, year=args.year, day=args.day)
+        elif args.update_markdown:
+            # Update based on what's specified
+            if args.year and args.day:
+                handlers.handle_update_markdown(tracker, year=args.year, day=args.day)
+            elif args.year:
+                handlers.handle_update_markdown(tracker, year=args.year)
+            else:
+                handlers.handle_update_markdown(tracker)
+
+        return
+
     # Handle stats generation
     if args.stats or args.update_readme:
         if not tracker:
@@ -57,7 +84,9 @@ def main() -> None:
             handlers.handle_stats(tracker, args.year_filter)
 
         if args.update_readme:
-            handlers.handle_update_readme(tracker)
+            # Deprecated: redirect to new markdown handler
+            print("⚠️  --update-readme is deprecated, use --update-markdown instead")
+            handlers.handle_update_markdown(tracker)
 
         return
 
@@ -110,6 +139,16 @@ def main() -> None:
         if args.benchmark_save and results:
             filename = None if args.benchmark_save == 'auto' else args.benchmark_save
             runner.save_benchmark_results(results, filename)
+
+        # Auto-update markdown if results were published to database
+        if args.benchmark_publish and tracker:
+            print("\n📝 Updating markdown documentation with new benchmark results...")
+            if args.benchmark_all:
+                handlers.handle_update_markdown(tracker, update_all=True)
+            elif args.benchmark_year:
+                handlers.handle_update_markdown(tracker, year=args.benchmark_year)
+            elif args.year:
+                handlers.handle_update_markdown(tracker, year=args.year)
 
         return
 

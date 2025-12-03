@@ -40,8 +40,17 @@ python main.py [year] [day] [options]
 | `--history` | flag | False | Show recent run history for the specified problem |
 | `--stats` | flag | False | Generate statistics tables from tracked data |
 | `--year-filter` | int | None | Filter stats by specific year (used with --stats) |
-| `--update-readme` | flag | False | Update README.md with latest statistics |
+| `--update-readme` | flag | False | Update README.md with latest statistics (deprecated) |
 | `--sync` | int | None | Sync already completed problems from AOC website for specified year |
+
+### Markdown Documentation Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--update-markdown` | flag | False | Update markdown files based on scope (use with year/day or --markdown-all) |
+| `--markdown-all` | flag | False | Update all markdown files (main README + all year-specific files) |
+| `--markdown-year` | int | None | Update markdown for specific year only |
+| `--markdown-day` | int | None | Update markdown for specific day (requires year and day args) |
 
 ## Usage Examples
 
@@ -100,12 +109,29 @@ python main.py --stats
 # Show statistics for specific year
 python main.py --stats --year-filter 2025
 
-# Update README.md with latest statistics
-python main.py --update-readme
-
 # Sync completed problems from AOC website
 python main.py --sync 2025
 ```
+
+### Markdown Documentation Updates
+```bash
+# Update all documentation (main README + all year-specific files)
+python main.py --update-markdown --markdown-all
+
+# Update main README overview table only
+python main.py --update-markdown
+
+# Update specific year documentation
+python main.py --update-markdown --markdown-year 2025
+
+# Update after running a specific day (updates day, year, and main README)
+python main.py 2025 1 --update-markdown
+
+# Update specific day documentation only (deprecated legacy option)
+python main.py --update-readme
+```
+
+**Note:** Markdown updates use benchmark data from the tracking database. Run benchmarks with `--benchmark-publish` to populate the database with performance data.
 
 ## File Structure Requirements
 

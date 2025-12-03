@@ -8,7 +8,7 @@ from typing import Optional, Tuple, Any
 import re
 
 from core import AOCTracker, AOCSubmitter, SolutionLoader, InputHandler
-from utils import DisplayFormatter, StatsGenerator
+from utils import DisplayFormatter, StatsGenerator, MarkdownGenerator
 from benchmarking import BenchmarkRunner
 
 
@@ -164,6 +164,25 @@ For more examples: python benchmarking/quick.py --examples
         # Write updated README
         readme_path.write_text(new_content, encoding='utf-8')
         print("✅ README.md updated with latest statistics")
+
+    def handle_update_markdown(self, tracker: AOCTracker, year: Optional[int] = None,
+                              day: Optional[int] = None, update_all: bool = False) -> None:
+        """Update markdown files based on specified scope."""
+        md_gen = MarkdownGenerator(tracker)
+
+        if update_all:
+            # Update main README and all year files
+            md_gen.update_all_readmes()
+        elif year and day:
+            # Update specific day
+            md_gen.update_day_readme(year, day)
+        elif year:
+            # Update specific year
+            md_gen.update_year_readme(year)
+            md_gen.update_main_readme()
+        else:
+            # Default: update main README only
+            md_gen.update_main_readme()
 
     def handle_history(self, tracker: AOCTracker, year: int, day: int, part: Optional[int] = None) -> None:
         """Show recent run history for this problem."""

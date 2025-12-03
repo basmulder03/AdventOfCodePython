@@ -27,11 +27,21 @@ class ArgumentParser:
         parser.add_argument("--stats", action="store_true",
                            help="generate statistics tables from tracked data")
         parser.add_argument("--update-readme", action="store_true",
-                           help="update README.md with latest statistics")
+                           help="update README.md with latest statistics (deprecated, use --update-markdown)")
         parser.add_argument("--year-filter", type=int,
                            help="filter stats by specific year (used with --stats)")
         parser.add_argument("--sync", type=int,
                            help="sync already completed problems from AOC website for specified year")
+
+        # Markdown update arguments
+        parser.add_argument("--update-markdown", action="store_true",
+                           help="update markdown files based on scope (use with year/day or --all)")
+        parser.add_argument("--markdown-all", action="store_true",
+                           help="update all markdown files (main README + all year files)")
+        parser.add_argument("--markdown-year", type=int,
+                           help="update markdown for specific year only")
+        parser.add_argument("--markdown-day", type=int,
+                           help="update markdown for specific day (requires year and day args)")
 
         # Benchmark arguments
         parser.add_argument("--benchmark", action="store_true",
@@ -49,7 +59,7 @@ class ArgumentParser:
         parser.add_argument("--benchmark-timeout", type=float, default=30.0,
                            help="timeout for individual benchmark runs in seconds (default: 30)")
         parser.add_argument("--benchmark-publish", action="store_true",
-                           help="publish benchmark results to tracking database")
+                           help="publish benchmark results to tracking database (auto-updates markdown)")
         parser.add_argument("--benchmark-help", action="store_true",
                            help="show detailed benchmarking help and examples")
 

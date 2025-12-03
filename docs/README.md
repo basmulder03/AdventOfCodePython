@@ -17,6 +17,7 @@ Welcome to the Advent of Code Python Solutions documentation!
 - **[Benchmarking](benchmarking.md)** - Performance benchmarking documentation
 - **[Database Publishing](database-publishing.md)** - Publishing benchmark results to database
 - **[Statistics Generation](statistics.md)** - How statistics are generated and displayed
+- **[Markdown Generation](markdown-generation.md)** - Auto-generate documentation from benchmarks
 
 ### Development
 - **[Project Structure](project-structure.md)** - Understanding the codebase organization

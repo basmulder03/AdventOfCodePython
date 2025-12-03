@@ -11,5 +11,6 @@ This package contains helper functions for:
 from .display import DisplayFormatter
 from .stats import StatsGenerator
 from .time_utils import format_time
+from .markdown_generator import MarkdownGenerator
 
-__all__ = ['DisplayFormatter', 'StatsGenerator', 'format_time']
+__all__ = ['DisplayFormatter', 'StatsGenerator', 'format_time', 'MarkdownGenerator']
