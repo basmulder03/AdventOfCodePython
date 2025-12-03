@@ -4,51 +4,232 @@ Complete command-line interface documentation for the Advent of Code Python solu
 
 ## Overview
 
-The Advent of Code Python CLI is a comprehensive solution runner that provides execution, tracking, submission, and statistics functionality for Advent of Code challenges. The CLI is implemented in Python and provides a rich terminal interface with optional colorized output.
+The Advent of Code Python CLI is a comprehensive solution runner that provides execution, tracking, submission, and statistics functionality for Advent of Code challenges. The CLI uses a subcommand-based structure for clarity and organization.
 
-## Command Syntax
+## Command Structure
 
+```bash
+# Default: Run solutions
+python main.py <year> <day> [options]
+
+# Subcommands for specific operations
+python main.py sync <year> [options]
+python main.py benchmark [year] [day] [options]
+python main.py stats [options]
+python main.py markdown [options]
 ```
-python main.py [year] [day] [options]
+
+## Default Command: Run Solutions
+
+Run Advent of Code solutions with positional year and day arguments.
+
+### Syntax
+```bash
+python main.py <year> <day> [options]
 ```
 
-## Positional Arguments
+### Positional Arguments
 
 | Argument | Type | Required | Description |
 |----------|------|----------|-------------|
-| `year` | int | Conditional* | The year of the AOC challenge (e.g., 2015, 2023, 2025) |
-| `day` | int | Conditional* | The day of the AOC challenge (1-25) |
+| `year` | int | Yes | The year of the AOC challenge (e.g., 2015, 2023, 2025) |
+| `day` | int | Yes | The day of the AOC challenge (1-25) |
 
-*Required when running solutions, optional for other operations like `--stats`, `--sync`, etc.
-
-## Options
-
-### Execution Options
+### Options for Run Command
 
 | Option | Short | Type | Default | Description |
 |--------|-------|------|---------|-------------|
 | `--part` | `-p` | int | None | Run only specific part (1 or 2). If omitted, runs both parts |
 | `--sample` | `-s` | flag | False | Use sample input instead of actual input |
 | `--sample-input` | | string | None | Provide sample input directly as a string (implies --sample) |
-| `--submit` | | flag | False | Submit the answer to AOC (only for actual input) |
+| `--submit` | | flag | False | Submit the answer to AOC (requires --part, only for actual input) |
 | `--no-tracking` | | flag | False | Disable run tracking and performance comparison |
+| `--history` | | flag | False | Show recent run history for this problem |
+| `--timeout` | | float | 5.0 | Timeout for solution execution in seconds |
+| `--no-timeout` | | flag | False | Disable timeout for solution execution |
 
-### Information & Statistics Options
+### Examples
+```bash
+# Run both parts
+python main.py 2025 1
+
+# Run specific part with sample input
+python main.py 2025 1 --part 1 -s
+
+# Submit answer
+python main.py 2025 1 --part 1 --submit
+
+# View history
+python main.py 2025 1 --history
+
+# Custom timeout
+python main.py 2025 1 --timeout 10.0
+```
+
+---
+
+## Sync Command
+
+Sync completed problems from the Advent of Code website to your local database.
+
+### Syntax
+```bash
+python main.py sync <year> [options]
+```
+
+### Positional Arguments
+
+| Argument | Type | Required | Description |
+|----------|------|----------|-------------|
+| `year` | int | Yes | Year to sync from AOC website |
+
+### Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--history` | flag | False | Show recent run history for the specified problem |
-| `--stats` | flag | False | Generate statistics tables from tracked data |
-| `--year-filter` | int | None | Filter stats by specific year (used with --stats) |
-| `--update-readme` | flag | False | Update README.md with latest statistics (deprecated) |
-| `--sync` | int | None | Sync already completed problems from AOC website for specified year |
+| `--no-tracking` | flag | False | Disable run tracking |
 
-### Markdown Documentation Options
+### Examples
+```bash
+# Sync year 2025
+python main.py sync 2025
+
+# Sync without tracking
+python main.py sync 2025 --no-tracking
+```
+
+---
+
+## Benchmark Command
+
+Run performance benchmarks on solutions.
+
+### Syntax
+```bash
+python main.py benchmark [year] [day] [options]
+```
+
+### Positional Arguments
+
+| Argument | Type | Required | Description |
+|----------|------|----------|-------------|
+| `year` | int | Conditional | Year to benchmark |
+| `day` | int | Conditional | Day to benchmark |
+
+### Options
+
+| Option | Short | Type | Default | Description |
+|--------|-------|------|---------|-------------|
+| `--part` | `-p` | int | None | Benchmark only specific part (1 or 2) |
+| `--all` | | flag | False | Benchmark all available solutions |
+| `--year` | | int | None | Benchmark all solutions for specific year |
+| `--runs` | | int | 10 | Number of benchmark runs |
+| `--warmup` | | int | 3 | Number of warmup runs |
+| `--timeout` | | float | 30.0 | Timeout for individual benchmark runs in seconds |
+| `--save` | | string | None | Save benchmark results to file (optional filename) |
+| `--publish` | | flag | False | Publish results to tracking database (auto-updates markdown) |
+| `--help-full` | | flag | False | Show detailed benchmarking help and examples |
+| `--no-tracking` | | flag | False | Disable run tracking |
+
+### Examples
+```bash
+# Benchmark a specific day
+python main.py benchmark 2025 1
+
+# Benchmark specific part
+python main.py benchmark 2025 1 --part 1
+
+# Benchmark all of 2025
+python main.py benchmark --year 2025
+
+# Benchmark everything
+python main.py benchmark --all
+
+# Custom settings with save
+python main.py benchmark 2025 1 --runs 50 --warmup 10 --save
+
+# Publish to database
+python main.py benchmark 2025 1 --publish
+```
+
+---
+
+## Stats Command
+
+Display statistics from tracked solution runs.
+
+### Syntax
+```bash
+python main.py stats [options]
+```
+
+### Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `--update-markdown` | flag | False | Update markdown files based on scope (use with year/day or --markdown-all) |
-| `--markdown-all` | flag | False | Update all markdown files (main README + all year-specific files) |
+| `--year` | int | None | Filter stats by specific year |
+| `--no-tracking` | flag | False | Disable run tracking |
+
+### Examples
+```bash
+# Show all statistics
+python main.py stats
+
+# Filter by year
+python main.py stats --year 2025
+```
+
+---
+
+## Markdown Command
+
+Update markdown documentation files.
+
+### Syntax
+```bash
+python main.py markdown [year] [day] [options]
+```
+
+### Positional Arguments
+
+| Argument | Type | Required | Description |
+|----------|------|----------|-------------|
+| `year` | int | No | Year for markdown update |
+| `day` | int | No | Day for markdown update |
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `--all` | flag | False | Update all markdown files (main README + all year files) |
+| `--year` | int | None | Update markdown for specific year only |
+| `--day` | int | None | Update markdown for specific day (requires year) |
+| `--no-tracking` | flag | False | Disable run tracking |
+
+### Examples
+```bash
+# Update main README
+python main.py markdown
+
+# Update all markdown
+python main.py markdown --all
+
+# Update specific year
+python main.py markdown --year 2025
+
+# Update specific day
+python main.py markdown 2025 1
+```
+
+---
+
+## Legacy Options (Deprecated)
+
+The following options are deprecated but may still work for backward compatibility:
+
+| Option | Replacement | Description |
+|--------|-------------|-------------|
+| `--update-readme` | `markdown` | Use `python main.py markdown` instead |
 | `--markdown-year` | int | None | Update markdown for specific year only |
 | `--markdown-day` | int | None | Update markdown for specific day (requires year and day args) |
 
@@ -104,34 +285,46 @@ python main.py 2025 1 --part 1 --history
 ### Statistics & Analysis
 ```bash
 # Show statistics for all years
-python main.py --stats
+python main.py stats
 
 # Show statistics for specific year
-python main.py --stats --year-filter 2025
+python main.py stats --year 2025
 
 # Sync completed problems from AOC website
-python main.py --sync 2025
+python main.py sync 2025
+```
+
+### Benchmarking
+```bash
+# Benchmark a specific day
+python main.py benchmark 2025 1
+
+# Benchmark with custom settings
+python main.py benchmark 2025 1 --runs 50 --warmup 10
+
+# Benchmark and publish to database
+python main.py benchmark 2025 1 --publish
+
+# Benchmark entire year
+python main.py benchmark --year 2025
 ```
 
 ### Markdown Documentation Updates
 ```bash
 # Update all documentation (main README + all year-specific files)
-python main.py --update-markdown --markdown-all
+python main.py markdown --all
 
 # Update main README overview table only
-python main.py --update-markdown
+python main.py markdown
 
 # Update specific year documentation
-python main.py --update-markdown --markdown-year 2025
+python main.py markdown --year 2025
 
-# Update after running a specific day (updates day, year, and main README)
-python main.py 2025 1 --update-markdown
-
-# Update specific day documentation only (deprecated legacy option)
-python main.py --update-readme
+# Update specific day
+python main.py markdown 2025 1
 ```
 
-**Note:** Markdown updates use benchmark data from the tracking database. Run benchmarks with `--benchmark-publish` to populate the database with performance data.
+**Note:** Markdown updates use benchmark data from the tracking database. Run benchmarks with `--publish` to populate the database with performance data.
 
 ## File Structure Requirements
 

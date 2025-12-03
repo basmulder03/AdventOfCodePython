@@ -21,139 +21,139 @@ def main() -> None:
     # Initialize command handlers
     handlers = CommandHandlers()
 
-    # Handle benchmark help
-    if args.benchmark_help:
-        handlers.handle_benchmark_help()
-        return
-
-    # Initialize tracking and submission
+    # Initialize tracking (can be disabled with --no-tracking)
     tracker = None if args.no_tracking else AOCTracker()
-    submitter = AOCSubmitter() if args.submit else None
 
-    # Handle sync operation
-    if args.sync:
+    # Get command (if any)
+    command = getattr(args, 'command', None)
+
+    # SYNC command
+    if command == 'sync':
         if not tracker:
             print("Sync requires tracking to be enabled (remove --no-tracking)")
             return
 
-        # Need submitter for fetching data from AOC website
-        if not submitter:
-            submitter = AOCSubmitter()
-
+        submitter = AOCSubmitter()
         if not submitter.is_configured():
             print("Session cookie is required for syncing. Please add your session cookie to session_cookie.txt")
             return
 
-        handlers.handle_sync(submitter, tracker, args.sync)
+        handlers.handle_sync(submitter, tracker, args.year)
         return
 
-    # Handle markdown updates
-    if args.update_markdown or args.markdown_all or args.markdown_year or args.markdown_day:
-        if not tracker:
-            print("Markdown updates require tracking to be enabled (remove --no-tracking)")
+    # BENCHMARK command
+    if command == 'benchmark':
+        # Handle full help
+        if hasattr(args, 'help_full') and args.help_full:
+            handlers.handle_benchmark_help()
             return
 
-        if args.markdown_all:
-            handlers.handle_update_markdown(tracker, update_all=True)
-        elif args.markdown_year:
-            handlers.handle_update_markdown(tracker, year=args.markdown_year)
-        elif args.markdown_day:
-            if args.year is None or args.day is None:
-                print("❌ --markdown-day requires year and day arguments")
-                print("Example: python main.py 2025 1 --markdown-day")
-                return
-            handlers.handle_update_markdown(tracker, year=args.year, day=args.day)
-        elif args.update_markdown:
-            # Update based on what's specified
-            if args.year and args.day:
-                handlers.handle_update_markdown(tracker, year=args.year, day=args.day)
-            elif args.year:
-                handlers.handle_update_markdown(tracker, year=args.year)
-            else:
-                handlers.handle_update_markdown(tracker)
-
-        return
-
-    # Handle stats generation
-    if args.stats or args.update_readme:
-        if not tracker:
-            print("Statistics require tracking to be enabled (remove --no-tracking)")
-            return
-
-        if args.stats:
-            handlers.handle_stats(tracker, args.year_filter)
-
-        if args.update_readme:
-            # Deprecated: redirect to new markdown handler
-            print("⚠️  --update-readme is deprecated, use --update-markdown instead")
-            handlers.handle_update_markdown(tracker)
-
-        return
-
-    # Handle benchmarking
-    if args.benchmark or args.benchmark_all or args.benchmark_year:
         # Initialize tracker for benchmarking if publishing is requested
-        benchmark_tracker = tracker if args.benchmark_publish else None
-        runner = BenchmarkRunner(tracker=benchmark_tracker, publish_to_db=args.benchmark_publish)
+        publish = hasattr(args, 'publish') and args.publish
+        benchmark_tracker = tracker if publish else None
+        runner = BenchmarkRunner(tracker=benchmark_tracker, publish_to_db=publish)
         results = None
 
-        if args.benchmark_publish and not tracker:
+        if publish and not tracker:
             print("⚠️  Database publishing requires tracking to be enabled (remove --no-tracking)")
             print("   Continuing without database publishing...")
             runner = BenchmarkRunner()
 
-        if args.benchmark_all:
+        # Determine scope
+        if args.all:
             # Benchmark all available solutions
-            results = runner.benchmark_all(runs=args.benchmark_runs, timeout=args.benchmark_timeout)
+            results = runner.benchmark_all(runs=args.runs, timeout=args.timeout)
 
-        elif args.benchmark_year:
-            # Benchmark specific year
-            results = runner.benchmark_year(args.benchmark_year, runs=args.benchmark_runs, timeout=args.benchmark_timeout)
+        elif args.year_flag:
+            # Benchmark specific year (using --year flag)
+            results = runner.benchmark_year(args.year_flag, runs=args.runs, timeout=args.timeout)
 
-        elif args.benchmark:
-            # Benchmark specific problem/day
-            if args.year is None or args.day is None:
-                print("❌ Benchmark requires specifying year and day")
-                print("Examples:")
-                print("  python main.py 2025 1 --benchmark              # Benchmark both parts of day 1")
-                print("  python main.py 2025 1 --benchmark --part 1     # Benchmark only part 1")
-                print("  python main.py --benchmark-year 2025           # Benchmark all of 2025")
-                print("  python main.py --benchmark-all                 # Benchmark everything")
-                return
-
+        elif args.year and args.day:
+            # Benchmark specific day
             if args.part:
                 # Benchmark single part
                 stats = runner.benchmark_problem(args.year, args.day, args.part,
-                                               runs=args.benchmark_runs,
-                                               warmup_runs=args.benchmark_warmup,
-                                               timeout=args.benchmark_timeout)
+                                               runs=args.runs,
+                                               warmup_runs=args.warmup,
+                                               timeout=args.timeout)
                 runner.print_benchmark_stats(f"{args.year} Day {args.day} Part {args.part}", stats)
 
                 # Convert single problem result to nested dict format for saving
                 results = {args.year: {args.day: {args.part: stats}}}
             else:
                 # Benchmark full day (both parts)
-                results = {args.year: runner.benchmark_day(args.year, args.day, runs=args.benchmark_runs, timeout=args.benchmark_timeout)}
+                results = {args.year: runner.benchmark_day(args.year, args.day, runs=args.runs, timeout=args.timeout)}
+        else:
+            print("❌ Benchmark requires specifying scope")
+            print("Examples:")
+            print("  python main.py benchmark 2025 1              # Benchmark both parts of day 1")
+            print("  python main.py benchmark 2025 1 --part 1     # Benchmark only part 1")
+            print("  python main.py benchmark --year 2025         # Benchmark all of 2025")
+            print("  python main.py benchmark --all               # Benchmark everything")
+            return
 
         # Save results if requested
-        if args.benchmark_save and results:
-            filename = None if args.benchmark_save == 'auto' else args.benchmark_save
+        if hasattr(args, 'save') and args.save and results:
+            filename = None if args.save == 'auto' else args.save
             runner.save_benchmark_results(results, filename)
 
         # Auto-update markdown if results were published to database
-        if args.benchmark_publish and tracker:
+        if publish and tracker:
             print("\n📝 Updating markdown documentation with new benchmark results...")
-            if args.benchmark_all:
+            if args.all:
                 handlers.handle_update_markdown(tracker, update_all=True)
-            elif args.benchmark_year:
-                handlers.handle_update_markdown(tracker, year=args.benchmark_year)
+            elif args.year_flag:
+                handlers.handle_update_markdown(tracker, year=args.year_flag)
             elif args.year:
                 handlers.handle_update_markdown(tracker, year=args.year)
 
         return
 
+    # STATS command
+    if command == 'stats':
+        if not tracker:
+            print("Statistics require tracking to be enabled (remove --no-tracking)")
+            return
+
+        year_filter = getattr(args, 'year', None)
+        handlers.handle_stats(tracker, year_filter)
+
+        if hasattr(args, 'update_readme') and args.update_readme:
+            # Deprecated: redirect to new markdown handler
+            print("⚠️  --update-readme is deprecated, use 'python main.py markdown' instead")
+            handlers.handle_update_markdown(tracker)
+
+        return
+
+    # MARKDOWN command
+    if command == 'markdown':
+        if not tracker:
+            print("Markdown updates require tracking to be enabled (remove --no-tracking)")
+            return
+
+        # Determine year and day from either positional or flag arguments
+        year = args.year_pos if hasattr(args, 'year_pos') and args.year_pos else getattr(args, 'year', None)
+        day = args.day_pos if hasattr(args, 'day_pos') and args.day_pos else getattr(args, 'day', None)
+
+        if args.all:
+            handlers.handle_update_markdown(tracker, update_all=True)
+        elif year and day:
+            handlers.handle_update_markdown(tracker, year=year, day=day)
+        elif year:
+            handlers.handle_update_markdown(tracker, year=year)
+        else:
+            handlers.handle_update_markdown(tracker)
+
+        return
+
+    # If we get here, it's the default run command (no subcommand specified)
+
     # Show history if requested
     if args.history:
+        if not args.year or not args.day:
+            print("❌ History requires year and day arguments")
+            print("Example: python main.py 2025 1 --history")
+            return
         if tracker:
             handlers.handle_history(tracker, args.year, args.day, args.part)
         else:
@@ -164,6 +164,9 @@ def main() -> None:
     if args.year is None or args.day is None:
         parser.print_help()
         return
+
+    # Initialize submitter only if needed
+    submitter = AOCSubmitter() if args.submit else None
 
     # Validate submission requirements
     if args.submit and args.part is None:
