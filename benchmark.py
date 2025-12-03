@@ -41,6 +41,7 @@ except ImportError:
     Style = _DummyStyle()
 
 from input import get_input
+from tracking import AOCTracker
 
 
 @dataclass
@@ -72,8 +73,10 @@ class BenchmarkStats:
 class BenchmarkRunner:
     """Main benchmarking class."""
 
-    def __init__(self):
+    def __init__(self, tracker: AOCTracker = None, publish_to_db: bool = False):
         self.results: List[BenchmarkResult] = []
+        self.tracker = tracker
+        self.publish_to_db = publish_to_db
 
     def load_solution_module(self, year: int, day: int) -> Any:
         """Load the solution module for the given year and day."""
@@ -100,6 +103,27 @@ class BenchmarkRunner:
             return get_input(year, day, sample=False)
         except Exception as e:
             raise RuntimeError(f"Failed to get input for {year} day {day}: {e}")
+
+    def publish_result_to_db(self, result: BenchmarkResult, input_data: str, code_content: str) -> None:
+        """Publish a benchmark result to the tracking database."""
+        if not self.tracker or not self.publish_to_db:
+            return
+
+        try:
+            self.tracker.record_run(
+                year=result.year,
+                day=result.day,
+                part=result.part,
+                execution_time=result.execution_time,
+                result=result.result,
+                input_data=input_data,
+                code_content=code_content,
+                success=result.success,
+                error_message=result.error_message,
+                is_sample=False  # Benchmarks are always on real data
+            )
+        except Exception as e:
+            print(f"⚠️  Failed to publish benchmark result to database: {e}")
 
     def run_single_benchmark(self, year: int, day: int, part: int,
                            input_data: str, module: Any, timeout: float = 30.0) -> BenchmarkResult:
@@ -174,6 +198,13 @@ class BenchmarkRunner:
         try:
             module = self.load_solution_module(year, day)
             input_data = self.get_input_data(year, day)
+
+            # Get code content for database publishing
+            code_content = ""
+            if self.publish_to_db:
+                module_path = Path.cwd() / f"{year}" / f"day{day}.py"
+                if module_path.exists():
+                    code_content = module_path.read_text()
         except Exception as e:
             print(f"❌ Failed to setup benchmark: {e}")
             return BenchmarkStats(0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, [])
@@ -192,6 +223,11 @@ class BenchmarkRunner:
         for i in range(runs):
             result = self.run_single_benchmark(year, day, part, input_data, module, timeout)
             all_results.append(result)
+
+            # Publish to database if configured
+            if self.publish_to_db:
+                self.publish_result_to_db(result, input_data, code_content)
+
             if result.success:
                 print(f"  Run {i+1}/{runs}: {result.execution_time*1000:.3f}ms")
             else:

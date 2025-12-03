@@ -12,6 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from benchmark import BenchmarkRunner
+from tracking import AOCTracker
 
 def quick_benchmark():
     """Quick benchmark utility with preset scenarios."""
@@ -25,6 +26,7 @@ Examples:
   %(prog)s thorough 2025 1    # Thorough benchmark (25 runs, 60s timeout)
   %(prog)s fast-year 2025     # Quick benchmark all of 2025
   %(prog)s fast-all           # Quick benchmark everything (WARNING: May take a while!)
+  %(prog)s fast 2025 1 --publish  # Benchmark and save to database
   
 Presets:
   fast     - 3 runs, 2 warmup, 5s timeout (good for quick checks)
@@ -40,42 +42,54 @@ Presets:
     fast_parser.add_argument('day', type=int, help='Day of the challenge')
     fast_parser.add_argument('--part', type=int, choices=[1, 2], help='Specific part only')
     fast_parser.add_argument('--save', type=str, nargs='?', const='auto', help='Save results to file')
-    
+    fast_parser.add_argument('--publish', action='store_true', help='Publish results to tracking database')
+
     # Normal benchmark presets
     normal_parser = subparsers.add_parser('normal', help='Standard benchmark (10 runs, 30s timeout)')
     normal_parser.add_argument('year', type=int, help='Year of the challenge')
     normal_parser.add_argument('day', type=int, help='Day of the challenge')
     normal_parser.add_argument('--part', type=int, choices=[1, 2], help='Specific part only')
     normal_parser.add_argument('--save', type=str, nargs='?', const='auto', help='Save results to file')
-    
+    normal_parser.add_argument('--publish', action='store_true', help='Publish results to tracking database')
+
     # Thorough benchmark presets
     thorough_parser = subparsers.add_parser('thorough', help='Detailed benchmark (25 runs, 60s timeout)')
     thorough_parser.add_argument('year', type=int, help='Year of the challenge')
     thorough_parser.add_argument('day', type=int, help='Day of the challenge')
     thorough_parser.add_argument('--part', type=int, choices=[1, 2], help='Specific part only')
     thorough_parser.add_argument('--save', type=str, nargs='?', const='auto', help='Save results to file')
-    
+    thorough_parser.add_argument('--publish', action='store_true', help='Publish results to tracking database')
+
     # Year benchmark presets
     fast_year_parser = subparsers.add_parser('fast-year', help='Quick benchmark all days in year')
     fast_year_parser.add_argument('year', type=int, help='Year to benchmark')
     fast_year_parser.add_argument('--save', type=str, nargs='?', const='auto', help='Save results to file')
-    
+    fast_year_parser.add_argument('--publish', action='store_true', help='Publish results to tracking database')
+
     normal_year_parser = subparsers.add_parser('normal-year', help='Standard benchmark all days in year')
     normal_year_parser.add_argument('year', type=int, help='Year to benchmark')
     normal_year_parser.add_argument('--save', type=str, nargs='?', const='auto', help='Save results to file')
-    
+    normal_year_parser.add_argument('--publish', action='store_true', help='Publish results to tracking database')
+
     # All benchmark presets
     fast_all_parser = subparsers.add_parser('fast-all', help='Quick benchmark everything')
     fast_all_parser.add_argument('--save', type=str, nargs='?', const='auto', help='Save results to file')
-    
+    fast_all_parser.add_argument('--publish', action='store_true', help='Publish results to tracking database')
+
     args = parser.parse_args()
     
     if not args.command:
         parser.print_help()
         return
     
-    runner = BenchmarkRunner()
-    
+    # Initialize tracker for database publishing if requested
+    tracker = None
+    publish_to_db = hasattr(args, 'publish') and args.publish
+    if publish_to_db:
+        tracker = AOCTracker()
+
+    runner = BenchmarkRunner(tracker=tracker, publish_to_db=publish_to_db)
+
     # Define presets
     presets = {
         'fast': {'runs': 3, 'warmup': 2, 'timeout': 5.0},

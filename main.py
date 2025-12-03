@@ -579,6 +579,7 @@ SCOPE OPTIONS:
 SAVING RESULTS:
   --benchmark-save                                      # Auto-generate filename
   --benchmark-save filename.json                       # Custom filename
+  --benchmark-publish                                   # Publish results to tracking database
 
 QUICK PRESETS (benchmark_quick.py):
   fast         3 runs, 2 warmup, 5s timeout           # Quick checks
@@ -602,6 +603,9 @@ EXAMPLES:
   python main.py 2025 1 --benchmark --benchmark-save before.json
   # ... make changes ...
   python main.py 2025 1 --benchmark --benchmark-save after.json
+
+  # Store benchmark results in database for tracking
+  python main.py 2025 1 --benchmark --benchmark-publish
 
 For detailed documentation: See BENCHMARK_README.md
 For more examples: python benchmark_quick.py --examples
@@ -694,6 +698,8 @@ def setup_argument_parser() -> argparse.ArgumentParser:
                        help="save benchmark results to file (optional filename)")
     parser.add_argument("--benchmark-timeout", type=float, default=30.0,
                        help="timeout for individual benchmark runs in seconds (default: 30)")
+    parser.add_argument("--benchmark-publish", action="store_true",
+                       help="publish benchmark results to tracking database")
     parser.add_argument("--benchmark-help", action="store_true",
                        help="show detailed benchmarking help and examples")
 
@@ -747,8 +753,15 @@ def main() -> None:
 
     # Handle benchmarking
     if args.benchmark or args.benchmark_all or args.benchmark_year:
-        runner = BenchmarkRunner()
+        # Initialize tracker for benchmarking if publishing is requested
+        benchmark_tracker = tracker if args.benchmark_publish else None
+        runner = BenchmarkRunner(tracker=benchmark_tracker, publish_to_db=args.benchmark_publish)
         results = None
+
+        if args.benchmark_publish and not tracker:
+            print("⚠️  Database publishing requires tracking to be enabled (remove --no-tracking)")
+            print("   Continuing without database publishing...")
+            runner = BenchmarkRunner()
 
         if args.benchmark_all:
             # Benchmark all available solutions
