@@ -2,7 +2,7 @@
 
 A comprehensive solution runner for [Advent of Code](https://adventofcode.com/) challenges with performance tracking, automated submission, and statistics generation.
 
-## Features
+## ✨ Features
 
 - 🎄 **Solution Runner**: Execute AOC solutions with timing and error handling
 - 📊 **Performance Tracking**: Track execution times and compare with previous runs  
@@ -12,7 +12,7 @@ A comprehensive solution runner for [Advent of Code](https://adventofcode.com/) 
 - 📝 **Template Generation**: Auto-create solution templates for new problems
 - 🎨 **Colorized Output**: Beautiful terminal output with progress indicators
 
-## Quick Start
+## 🚀 Quick Start
 
 1. **Install Dependencies**
    ```bash
@@ -20,7 +20,7 @@ A comprehensive solution runner for [Advent of Code](https://adventofcode.com/) 
    ```
 
 2. **Set up Session Cookie**
-   - Get your session cookie from AOC website
+   - Get your session cookie from AOC website  
    - Save it in `session_cookie.txt`
 
 3. **Run a Solution**
@@ -28,93 +28,38 @@ A comprehensive solution runner for [Advent of Code](https://adventofcode.com/) 
    python main.py 2025 1
    ```
 
-## Usage
+**Need more details?** Check the [Installation & Setup Guide](docs/setup.md) for comprehensive instructions.
 
-### Basic Commands
+## 📖 Documentation
+
+- **[📋 Installation & Setup](docs/setup.md)** - Detailed setup instructions
+- **[⌨️ CLI Reference](docs/cli-reference.md)** - Complete command-line documentation  
+- **[✍️ Solution Writing Guide](docs/solution-guide.md)** - How to write effective solutions
+- **[📊 Performance Tracking](docs/tracking.md)** - Understanding the tracking system
+- **[🏃 Benchmarking](docs/benchmarking.md)** - Performance analysis tools
+- **[📈 Statistics](docs/statistics.md)** - Statistics generation and analysis
+- **[🏗️ Project Structure](docs/project-structure.md)** - Understanding the codebase
+
+## 💡 Quick Examples
 
 ```bash
 # Run both parts for day 1 of 2025
 python main.py 2025 1
 
-# Run only part 1
-python main.py 2025 1 --part 1
-
 # Test with sample input
 python main.py 2025 1 --sample
 
-# Provide custom sample input
-python main.py 2025 1 --sample-input "1\n2\n3"
-
-# Submit answer to AOC
+# Submit answer to AOC  
 python main.py 2025 1 --submit
 
 # Show run history
 python main.py 2025 1 --history
-```
 
-### Statistics Generation
-
-Generate comprehensive statistics tables from your tracked performance data:
-
-```bash
-# Generate all statistics
+# Generate statistics
 python main.py --stats
-
-# Generate stats for specific year
-python main.py --stats --year-filter 2025
-
-# Generate stats and update README
-python main.py --stats --update-readme
 ```
 
-## Command Line Options
-
-| Option | Description |
-|--------|-------------|
-| `year day` | Year and day of the challenge to run |
-| `--part, -p` | Run only specific part (1 or 2) |
-| `--sample, -s` | Use sample input file |
-| `--sample-input` | Provide sample input as string |
-| `--submit` | Submit answer to AOC |
-| `--history` | Show recent run history |
-| `--no-tracking` | Disable performance tracking |
-| `--stats` | Generate statistics tables |
-| `--year-filter YEAR` | Filter stats by specific year |
-| `--update-readme` | Update this README with latest stats |
-
-## Project Structure
-
-```
-AdventOfCodePython/
-├── main.py              # Main runner script
-├── input.py             # Input fetching utilities
-├── tracking.py          # Performance tracking system
-├── submitter.py         # AOC submission handler
-├── requirements.txt     # Python dependencies
-├── session_cookie.txt   # Your AOC session cookie
-├── aoc_tracking.db      # SQLite database for tracking
-├── YYYY/                # Year directories
-│   └── dayN.py         # Daily solutions
-└── input/               # Input files
-    └── YYYY/
-        └── dayN.txt
-```
-
-## Solution Template
-
-When you run a new day, a template is automatically created:
-
-```python
-from typing import Any
-
-def solve_part_1(input_data: str) -> Any:
-    """Solve part 1 of the challenge."""
-    pass
-
-def solve_part_2(input_data: str) -> Any:
-    """Solve part 2 of the challenge."""
-    pass
-```
+**See more examples in the [CLI Reference](docs/cli-reference.md)**
 
 <!-- STATS_START -->
 ## 🎄 Overall Statistics
@@ -183,33 +128,12 @@ def solve_part_2(input_data: str) -> Any:
 *Last updated: 2025-12-03 14:38:16*
 <!-- STATS_END -->
 
-## Performance Tracking
-
-The tracker automatically records:
-- Execution times for each run
-- Code changes (via content hash)
-- Success/failure status
-- Input variations
-- Submission attempts and results
-
-Performance comparisons show:
-- 🥇 Personal best times
-- 📈 Improvements vs previous runs
-- 📊 Run count and success rate
-
-## Submission Features
-
-- ✅ **Smart Timeout Handling**: Respects AOC's rate limits
-- 🔍 **Duplicate Detection**: Won't resubmit the same answer
-- 📝 **Response Tracking**: Stores submission results
-- 🎯 **Correct Answer Cache**: Remembers accepted answers
-
-## Requirements
+## 📋 Requirements
 
 - Python 3.7+
 - `requests` (for AOC communication)
 - `colorama` (optional, for colored output)
 
-## License
+## 📄 License
 
 This project is for educational purposes. Please respect Advent of Code's [terms of service](https://adventofcode.com/about).

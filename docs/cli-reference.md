@@ -1,4 +1,6 @@
-# Advent of Code Python CLI Specification
+# CLI Reference
+
+Complete command-line interface documentation for the Advent of Code Python solution runner.
 
 ## Overview
 
