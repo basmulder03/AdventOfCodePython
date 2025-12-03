@@ -52,7 +52,7 @@ class DisplayFormatter:
         return title
 
     def print_part_result(self, part_num: int, result: Any, elapsed_time: float,
-                         tracker=None, year: int = None, day: int = None) -> None:
+                         tracker=None, year: int = None, day: int = None, code_content: str = "") -> None:
         """Print the result of running a part."""
         if self.color_support:
             part_header = f"{Fore.CYAN}{Style.BRIGHT}Part {part_num}:{Style.RESET_ALL}"
@@ -67,7 +67,7 @@ class DisplayFormatter:
 
         # Show performance comparison if tracking is enabled
         if tracker and year and day:
-            comparison = tracker.get_performance_comparison(year, day, part_num, elapsed_time * 1000)
+            comparison = tracker.get_performance_comparison(year, day, part_num, elapsed_time * 1000, code_content)
             if comparison:
                 if self.color_support:
                     if comparison['is_best']:

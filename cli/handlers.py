@@ -198,6 +198,20 @@ For more examples: python benchmarking/quick.py --examples
                 should_submit: bool, is_sample: bool) -> Tuple[bool, float, Any]:
         """Run a single part of the solution."""
         from time import perf_counter
+        import inspect
+
+        # Get the code content for tracking
+        code_content = ""
+        try:
+            code_content = inspect.getsource(module)
+        except (OSError, TypeError):
+            # Fallback: try to read the file directly
+            try:
+                module_path = Path.cwd() / f"{year}" / f"day{day}.py"
+                if module_path.exists():
+                    code_content = module_path.read_text()
+            except Exception:
+                pass
 
         try:
             func_name = f"solve_part_{part_num}"
@@ -212,7 +226,7 @@ For more examples: python benchmarking/quick.py --examples
             end_time = perf_counter()
             elapsed_time = end_time - start_time
 
-            self.display.print_part_result(part_num, result, elapsed_time, tracker, year, day)
+            self.display.print_part_result(part_num, result, elapsed_time, tracker, year, day, code_content)
 
             # Track the run if tracking is enabled
             if tracker and not is_sample:
@@ -220,9 +234,10 @@ For more examples: python benchmarking/quick.py --examples
                     year=year,
                     day=day,
                     part=part_num,
-                    execution_time_ms=elapsed_time * 1000,
+                    execution_time=elapsed_time,
                     result=str(result),
                     input_data=input_data,
+                    code_content=code_content,
                     success=True,
                     is_sample=is_sample
                 )
@@ -242,9 +257,10 @@ For more examples: python benchmarking/quick.py --examples
                     year=year,
                     day=day,
                     part=part_num,
-                    execution_time_ms=0,
+                    execution_time=0,
                     result=None,
                     input_data=input_data,
+                    code_content=code_content,
                     success=False,
                     error_message=str(e),
                     is_sample=is_sample
@@ -264,10 +280,7 @@ For more examples: python benchmarking/quick.py --examples
 
             # Record successful submission in tracker
             if tracker:
-                tracker.record_submission(year, day, part, str(answer), success, message)
-
-                # Also mark this answer as correct in the tracker
-                tracker.mark_answer_correct(year, day, part, str(answer))
+                tracker.record_submission(year, day, part, str(answer), 'correct', message)
 
         elif wait_time:
             print(f"⏰ {message}")
@@ -275,10 +288,10 @@ For more examples: python benchmarking/quick.py --examples
 
             # Record rate-limited submission
             if tracker:
-                tracker.record_submission(year, day, part, str(answer), False, message)
+                tracker.record_submission(year, day, part, str(answer), 'rate_limited', message, wait_time)
         else:
             print(f"❌ {message}")
 
             # Record failed submission
             if tracker:
-                tracker.record_submission(year, day, part, str(answer), False, message)
+                tracker.record_submission(year, day, part, str(answer), 'incorrect', message)

@@ -107,39 +107,38 @@ class AOCTracker:
 
             code_hash = self._hash_content(code_content)
 
-            # Get best time for this solution (excluding sample runs)
+            # Get statistics for this problem (excluding sample runs)
             cursor.execute("""
-                SELECT MIN(execution_time_ms), COUNT(*) 
+                SELECT MIN(execution_time_ms), AVG(execution_time_ms), COUNT(*) 
                 FROM runs 
                 WHERE year = ? AND day = ? AND part = ? AND success = 1 AND is_sample = 0
             """, (year, day, part))
 
-            best_result = cursor.fetchone()
-            if not best_result or best_result[0] is None:
+            stats_result = cursor.fetchone()
+            if not stats_result or stats_result[0] is None:
                 return None
 
-            best_time, total_runs = best_result
-            current_time_ms = current_time * 1000
+            best_time, avg_time, run_count = stats_result
 
-            # Get previous run with same code (excluding sample runs)
+            # Check if current time is the best
+            is_best = current_time <= best_time
+
+            # Calculate percentile (how many runs were slower than current)
             cursor.execute("""
-                SELECT execution_time_ms 
+                SELECT COUNT(*) 
                 FROM runs 
-                WHERE year = ? AND day = ? AND part = ? AND code_hash = ? AND success = 1 AND is_sample = 0
-                ORDER BY timestamp DESC 
-                LIMIT 1 OFFSET 1
-            """, (year, day, part, code_hash))
+                WHERE year = ? AND day = ? AND part = ? AND success = 1 AND is_sample = 0 AND execution_time_ms > ?
+            """, (year, day, part, current_time))
 
-            prev_result = cursor.fetchone()
-            prev_time = prev_result[0] if prev_result else None
+            slower_count = cursor.fetchone()[0]
+            percentile = (slower_count / run_count * 100) if run_count > 0 else 0
 
             return {
-                'current_time': current_time_ms,
+                'is_best': is_best,
+                'percentile': percentile,
+                'avg_time': avg_time,
                 'best_time': best_time,
-                'previous_time': prev_time,
-                'total_runs': total_runs,
-                'improvement_vs_best': ((best_time - current_time_ms) / best_time * 100) if best_time > 0 else 0,
-                'improvement_vs_prev': ((prev_time - current_time_ms) / prev_time * 100) if prev_time else None
+                'run_count': run_count
             }
 
     def can_submit(self, year: int, day: int, part: int) -> Tuple[bool, Optional[datetime]]:
