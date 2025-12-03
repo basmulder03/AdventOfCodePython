@@ -314,11 +314,202 @@ def show_history(tracker: AOCTracker, year: int, day: int, part: int = None) -> 
                 print(f"  {timestamp} {status} {time_info}")
 
 
+def format_time(ms: float) -> str:
+    """Format time in a human-readable way."""
+    if ms < 1:
+        return f"{ms:.3f}ms"
+    elif ms < 1000:
+        return f"{ms:.1f}ms"
+    else:
+        return f"{ms/1000:.2f}s"
+
+
+def format_table_for_terminal(headers: list, rows: list) -> str:
+    """Format table for nice terminal display."""
+    # Calculate column widths
+    widths = [len(str(h)) for h in headers]
+    for row in rows:
+        for i, cell in enumerate(row):
+            widths[i] = max(widths[i], len(str(cell)))
+
+    # Create formatted table
+    lines = []
+
+    # Header
+    header_line = "  ".join(f"{str(headers[i]):<{widths[i]}}" for i in range(len(headers)))
+    lines.append(header_line)
+
+    # Separator
+    separator = "  ".join("-" * widths[i] for i in range(len(headers)))
+    lines.append(separator)
+
+    # Rows
+    for row in rows:
+        row_line = "  ".join(f"{str(row[i]):<{widths[i]}}" for i in range(len(row)))
+        lines.append(row_line)
+
+    return "\n".join(lines)
+
+
+def generate_stats_table(tracker: AOCTracker, year: int = None, for_readme: bool = False) -> str:
+    """Generate statistics table for display."""
+    best_times = tracker.get_best_times_by_year(year)
+    if not best_times:
+        return "No performance data available."
+
+    # Group by year
+    years_data = {}
+    for entry in best_times:
+        y = entry['year']
+        if y not in years_data:
+            years_data[y] = {}
+        day = entry['day']
+        if day not in years_data[y]:
+            years_data[y][day] = {}
+        years_data[y][day][entry['part']] = entry
+
+    output = []
+
+    for year_key in sorted(years_data.keys(), reverse=True):
+        year_data = years_data[year_key]
+        year_summary = tracker.get_year_summary(year_key)
+
+        output.append(f"\n## {year_key} Statistics")
+        output.append(f"\n**Year Summary:**")
+        output.append(f"- ⭐ Stars: {year_summary['stars']}")
+        output.append(f"- 🧩 Problems Solved: {year_summary['total_solved']}")
+        output.append(f"- 🏃 Total Runs: {year_summary['total_runs']} ({year_summary['success_rate']:.1f}% success)")
+        output.append(f"- ⚡ Average Time: {format_time(year_summary['average_time_ms'])}")
+        output.append(f"- 🚀 Fastest Time: {format_time(year_summary['fastest_time_ms'])}")
+
+        output.append(f"\n**Best Times by Day:**")
+
+        # Prepare table data
+        table_rows = []
+        for day in sorted(year_data.keys()):
+            day_data = year_data[day]
+            part1_time = format_time(day_data[1]['best_time_ms']) if 1 in day_data else "—"
+            part2_time = format_time(day_data[2]['best_time_ms']) if 2 in day_data else "—"
+
+            total_time = 0
+            if 1 in day_data and 2 in day_data:
+                total_time = day_data[1]['best_time_ms'] + day_data[2]['best_time_ms']
+                total_str = format_time(total_time)
+            elif 1 in day_data:
+                total_str = part1_time
+            elif 2 in day_data:
+                total_str = part2_time
+            else:
+                total_str = "—"
+
+            table_rows.append([day, part1_time, part2_time, total_str])
+
+        if for_readme:
+            # Markdown table format
+            output.append("")
+            output.append("| Day | Part 1 | Part 2 | Total |")
+            output.append("|-----|--------|--------|-------|")
+            for row in table_rows:
+                day, part1, part2, total = row
+                output.append(f"| {day:2d} | {part1:>7} | {part2:>7} | {total:>7} |")
+        else:
+            # Terminal-friendly table format
+            output.append("")
+            headers = ["Day", "Part 1", "Part 2", "Total"]
+            formatted_table = format_table_for_terminal(headers, table_rows)
+            output.append(formatted_table)
+
+    return "\n".join(output)
+
+
+def generate_overall_stats(tracker: AOCTracker) -> str:
+    """Generate overall statistics across all years."""
+    overall_summary = tracker.get_year_summary()
+    available_years = tracker.get_available_years()
+
+    if not available_years:
+        return "No tracked data available."
+
+    output = []
+    output.append("## 🎄 Overall Statistics")
+    output.append("")
+    output.append(f"**Summary Across All Years ({min(available_years)}-{max(available_years)}):**")
+    output.append(f"- ⭐ Total Stars: {overall_summary['stars']}")
+    output.append(f"- 🧩 Total Problems Solved: {overall_summary['total_solved']}")
+    output.append(f"- 🏃 Total Runs: {overall_summary['total_runs']} ({overall_summary['success_rate']:.1f}% success)")
+    output.append(f"- ⚡ Average Time: {format_time(overall_summary['average_time_ms'])}")
+    output.append(f"- 🚀 Fastest Time: {format_time(overall_summary['fastest_time_ms'])}")
+    output.append(f"- 🐌 Slowest Time: {format_time(overall_summary['slowest_time_ms'])}")
+    output.append("")
+
+    return "\n".join(output)
+
+
+def show_statistics(tracker: AOCTracker, year: int = None) -> None:
+    """Display statistics in the terminal."""
+    if COLOR_SUPPORT:
+        print(f"{Fore.CYAN}{Style.BRIGHT}📊 Advent of Code Statistics{Style.RESET_ALL}")
+    else:
+        print("📊 Advent of Code Statistics")
+    print("=" * 60)
+
+    if year:
+        stats_content = generate_stats_table(tracker, year, for_readme=False)
+    else:
+        # Show overall stats first
+        overall_stats = generate_overall_stats(tracker)
+        year_stats = generate_stats_table(tracker, for_readme=False)
+        stats_content = overall_stats + "\n" + year_stats
+
+    print(stats_content)
+    print("=" * 60)
+
+
+def update_readme_with_stats(tracker: AOCTracker) -> None:
+    """Update README.md with the latest statistics."""
+    readme_path = Path.cwd() / "README.md"
+    if not readme_path.exists():
+        if COLOR_SUPPORT:
+            print(f"{Fore.RED}❌ README.md not found{Style.RESET_ALL}")
+        else:
+            print("❌ README.md not found")
+        return
+
+    # Generate stats content
+    overall_stats = generate_overall_stats(tracker)
+    year_stats = generate_stats_table(tracker, for_readme=True)
+    stats_content = overall_stats + "\n" + year_stats
+
+    # Add timestamp
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    stats_section = f"<!-- STATS_START -->\n{stats_content}\n\n*Last updated: {timestamp}*\n<!-- STATS_END -->"
+
+    # Read current README
+    current_content = readme_path.read_text(encoding='utf-8')
+
+    # Replace stats section
+    import re
+    pattern = r'<!-- STATS_START -->.*?<!-- STATS_END -->'
+    if re.search(pattern, current_content, re.DOTALL):
+        new_content = re.sub(pattern, stats_section, current_content, flags=re.DOTALL)
+    else:
+        # If no stats section exists, append it
+        new_content = current_content + "\n\n" + stats_section
+
+    # Write updated README
+    readme_path.write_text(new_content, encoding='utf-8')
+
+    if COLOR_SUPPORT:
+        print(f"{Fore.GREEN}✅ README.md updated with latest statistics{Style.RESET_ALL}")
+    else:
+        print("✅ README.md updated with latest statistics")
+
+
 def setup_argument_parser() -> argparse.ArgumentParser:
     """Set up and return the command line argument parser."""
     parser = argparse.ArgumentParser(description="Run Advent of Code solutions")
-    parser.add_argument("year", type=int, help="the year of the AOC challenge")
-    parser.add_argument("day", type=int, help="the day of the AOC challenge")
+    parser.add_argument("year", type=int, nargs='?', help="the year of the AOC challenge")
+    parser.add_argument("day", type=int, nargs='?', help="the day of the AOC challenge")
     parser.add_argument("--sample", "-s", action="store_true",
                        help="use sample input instead of actual input")
     parser.add_argument("--sample-input", type=str,
@@ -331,6 +522,12 @@ def setup_argument_parser() -> argparse.ArgumentParser:
                        help="disable run tracking and performance comparison")
     parser.add_argument("--history", action="store_true",
                        help="show recent run history for this problem")
+    parser.add_argument("--stats", action="store_true",
+                       help="generate statistics tables from tracked data")
+    parser.add_argument("--update-readme", action="store_true",
+                       help="update README.md with latest statistics")
+    parser.add_argument("--year-filter", type=int,
+                       help="filter stats by specific year (used with --stats)")
     return parser
 
 
@@ -343,12 +540,31 @@ def main() -> None:
     tracker = None if args.no_tracking else AOCTracker()
     submitter = AOCSubmitter() if args.submit else None
 
+    # Handle stats generation
+    if args.stats or args.update_readme:
+        if not tracker:
+            print("Statistics require tracking to be enabled (remove --no-tracking)")
+            return
+
+        if args.stats:
+            show_statistics(tracker, args.year_filter)
+
+        if args.update_readme:
+            update_readme_with_stats(tracker)
+
+        return
+
     # Show history if requested
     if args.history:
         if tracker:
             show_history(tracker, args.year, args.day, args.part)
         else:
             print("History requires tracking to be enabled (remove --no-tracking)")
+        return
+
+    # Validate required arguments for solution running
+    if args.year is None or args.day is None:
+        parser.print_help()
         return
 
     try:

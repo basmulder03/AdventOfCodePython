@@ -223,3 +223,135 @@ class AOCTracker:
                 for row in cursor.fetchall()
             ]
 
+    def get_best_times_by_year(self, year: int = None) -> List[Dict]:
+        """Get best execution times for each day/part, optionally filtered by year."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+
+            where_clause = "WHERE success = 1"
+            params = []
+            if year:
+                where_clause += " AND year = ?"
+                params.append(year)
+
+            cursor.execute(f"""
+                WITH best_runs AS (
+                    SELECT 
+                        year, day, part,
+                        MIN(execution_time_ms) as best_time_ms
+                    FROM runs 
+                    {where_clause}
+                    GROUP BY year, day, part
+                )
+                SELECT 
+                    br.year, br.day, br.part,
+                    br.best_time_ms,
+                    COUNT(r.id) as total_runs,
+                    r.result,
+                    r.timestamp as best_run_timestamp
+                FROM best_runs br
+                JOIN runs r ON (
+                    r.year = br.year AND 
+                    r.day = br.day AND 
+                    r.part = br.part AND 
+                    r.execution_time_ms = br.best_time_ms AND
+                    r.success = 1
+                )
+                LEFT JOIN runs r2 ON (
+                    r2.year = br.year AND 
+                    r2.day = br.day AND 
+                    r2.part = br.part AND 
+                    r2.success = 1
+                )
+                GROUP BY br.year, br.day, br.part, r.result, r.timestamp
+                ORDER BY br.year DESC, br.day ASC, br.part ASC
+            """, params)
+
+            return [
+                {
+                    'year': row[0],
+                    'day': row[1],
+                    'part': row[2],
+                    'best_time_ms': row[3],
+                    'total_runs': row[4],
+                    'result': row[5],
+                    'best_run_timestamp': row[6]
+                }
+                for row in cursor.fetchall()
+            ]
+
+    def get_year_summary(self, year: int = None) -> Dict:
+        """Get summary statistics for a year or all years."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+
+            where_clause = ""
+            params = []
+            if year:
+                where_clause = "WHERE year = ?"
+                params.append(year)
+
+            # Total problems solved
+            additional_where = " AND success = 1"
+            if where_clause:
+                full_where = where_clause + additional_where
+            else:
+                full_where = "WHERE success = 1"
+
+            cursor.execute(f"""
+                SELECT COUNT(DISTINCT year || '-' || day || '-' || part)
+                FROM runs 
+                {full_where}
+            """, params)
+            total_solved = cursor.fetchone()[0]
+
+            # Total runs
+            cursor.execute(f"""
+                SELECT COUNT(*), SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END)
+                FROM runs 
+                {where_clause if where_clause else ""}
+            """, params)
+            total_runs, successful_runs = cursor.fetchone()
+
+            # Best times
+            success_where = " AND success = 1"
+            if where_clause:
+                times_where = where_clause + success_where
+            else:
+                times_where = "WHERE success = 1"
+
+            cursor.execute(f"""
+                SELECT 
+                    MIN(execution_time_ms) as fastest,
+                    MAX(execution_time_ms) as slowest,
+                    AVG(execution_time_ms) as average
+                FROM runs 
+                {times_where}
+            """, params)
+            times = cursor.fetchone()
+
+            # Stars (correct submissions)
+            cursor.execute(f"""
+                SELECT COUNT(*) FROM correct_answers
+                {where_clause if where_clause else ""}
+            """, params)
+            stars = cursor.fetchone()[0]
+
+            return {
+                'total_solved': total_solved,
+                'total_runs': total_runs,
+                'successful_runs': successful_runs,
+                'success_rate': (successful_runs / total_runs * 100) if total_runs > 0 else 0,
+                'fastest_time_ms': times[0] if times[0] else 0,
+                'slowest_time_ms': times[1] if times[1] else 0,
+                'average_time_ms': times[2] if times[2] else 0,
+                'stars': stars
+            }
+
+    def get_available_years(self) -> List[int]:
+        """Get all years that have tracked data."""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT DISTINCT year FROM runs ORDER BY year DESC")
+            return [row[0] for row in cursor.fetchall()]
+
