@@ -168,12 +168,14 @@ def main() -> None:
     # Check if puzzle HTML needs to be downloaded
     from pathlib import Path
 
-    # Determine which part to check for
-    part_to_check = args.part if args.part else 1
-    puzzle_part_file = Path.cwd() / ".puzzle_html" / str(args.year) / f"day{args.day}" / f"part{part_to_check}.txt"
+    # Check if we need to download puzzle parts
+    puzzle_part1_file = Path.cwd() / ".puzzle_html" / str(args.year) / f"day{args.day}" / "part1.txt"
+    puzzle_part2_file = Path.cwd() / ".puzzle_html" / str(args.year) / f"day{args.day}" / "part2.txt"
 
-    # Auto-download if the file doesn't exist
-    needs_download = not puzzle_part_file.exists()
+    # Auto-download if:
+    # 1. Part 1 doesn't exist (fresh download)
+    # 2. Part 1 exists but part 2 doesn't (need to refresh for part 2)
+    needs_download = not puzzle_part1_file.exists() or (puzzle_part1_file.exists() and not puzzle_part2_file.exists())
 
     # Initialize submitter only if needed
     submitter = AOCSubmitter() if (args.submit or needs_download) else None
