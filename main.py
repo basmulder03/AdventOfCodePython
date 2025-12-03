@@ -7,6 +7,7 @@ from datetime import datetime
 from input import get_input, is_input_available
 from tracking import AOCTracker
 from submitter import AOCSubmitter
+from benchmark import BenchmarkRunner
 
 try:
     from colorama import init, Fore, Style
@@ -553,6 +554,65 @@ def sync_completed_problems(submitter: AOCSubmitter, tracker: AOCTracker, year: 
             print(f"💡 You can now see these in statistics with --stats")
 
 
+def show_benchmark_help() -> None:
+    """Show comprehensive benchmarking help."""
+    help_text = """
+🎄 Advent of Code Benchmarking Help
+
+QUICK START:
+  python main.py 2025 1 --benchmark                    # Benchmark both parts of day 1
+  python benchmark_quick.py fast 2025 1                # Quick benchmark with presets
+  python benchmark_quick.py --examples                 # Show detailed examples
+
+BASIC BENCHMARKING:
+  --benchmark                                           # Enable benchmarking
+  --benchmark-runs N           (default: 10)           # Number of measurement runs
+  --benchmark-warmup N         (default: 3)            # Number of warmup runs  
+  --benchmark-timeout N        (default: 30)           # Timeout per run (seconds)
+
+SCOPE OPTIONS:
+  python main.py YEAR DAY --benchmark                   # Single day (both parts)
+  python main.py YEAR DAY --benchmark --part N          # Single part only
+  python main.py --benchmark-year YEAR                 # All days in year
+  python main.py --benchmark-all                       # All available solutions
+
+SAVING RESULTS:
+  --benchmark-save                                      # Auto-generate filename
+  --benchmark-save filename.json                       # Custom filename
+
+QUICK PRESETS (benchmark_quick.py):
+  fast         3 runs, 2 warmup, 5s timeout           # Quick checks
+  normal       10 runs, 3 warmup, 30s timeout         # Standard measurement
+  thorough     25 runs, 5 warmup, 60s timeout         # Detailed analysis
+
+EXAMPLES:
+  # Quick development check
+  python benchmark_quick.py fast 2025 1
+
+  # Detailed optimization analysis  
+  python benchmark_quick.py thorough 2025 1 --save
+
+  # Find slow solutions across all years
+  python main.py --benchmark-all --benchmark-runs 1 --benchmark-timeout 5
+
+  # Regression testing
+  python benchmark_quick.py fast-year 2025 --save baseline.json
+
+  # Compare implementations
+  python main.py 2025 1 --benchmark --benchmark-save before.json
+  # ... make changes ...
+  python main.py 2025 1 --benchmark --benchmark-save after.json
+
+For detailed documentation: See BENCHMARK_README.md
+For more examples: python benchmark_quick.py --examples
+    """
+
+    if COLOR_SUPPORT:
+        print(f"{Fore.CYAN}{help_text}{Style.RESET_ALL}")
+    else:
+        print(help_text)
+
+
 def update_readme_with_stats(tracker: AOCTracker) -> None:
     """Update README.md with the latest statistics."""
     readme_path = Path.cwd() / "README.md"
@@ -618,6 +678,25 @@ def setup_argument_parser() -> argparse.ArgumentParser:
                        help="filter stats by specific year (used with --stats)")
     parser.add_argument("--sync", type=int,
                        help="sync already completed problems from AOC website for specified year")
+
+    # Benchmark arguments
+    parser.add_argument("--benchmark", action="store_true",
+                       help="run benchmarking on specified problem/day/year")
+    parser.add_argument("--benchmark-runs", type=int, default=10,
+                       help="number of benchmark runs (default: 10)")
+    parser.add_argument("--benchmark-warmup", type=int, default=3,
+                       help="number of warmup runs (default: 3)")
+    parser.add_argument("--benchmark-all", action="store_true",
+                       help="benchmark all available solutions")
+    parser.add_argument("--benchmark-year", type=int,
+                       help="benchmark all solutions for specific year")
+    parser.add_argument("--benchmark-save", type=str, nargs='?', const='auto',
+                       help="save benchmark results to file (optional filename)")
+    parser.add_argument("--benchmark-timeout", type=float, default=30.0,
+                       help="timeout for individual benchmark runs in seconds (default: 30)")
+    parser.add_argument("--benchmark-help", action="store_true",
+                       help="show detailed benchmarking help and examples")
+
     return parser
 
 
@@ -625,6 +704,11 @@ def main() -> None:
     """Main entry point for the Advent of Code solution runner."""
     parser = setup_argument_parser()
     args = parser.parse_args()
+
+    # Handle benchmark help
+    if args.benchmark_help:
+        show_benchmark_help()
+        return
 
     # Initialize tracking and submission
     tracker = None if args.no_tracking else AOCTracker()
@@ -658,6 +742,51 @@ def main() -> None:
 
         if args.update_readme:
             update_readme_with_stats(tracker)
+
+        return
+
+    # Handle benchmarking
+    if args.benchmark or args.benchmark_all or args.benchmark_year:
+        runner = BenchmarkRunner()
+        results = None
+
+        if args.benchmark_all:
+            # Benchmark all available solutions
+            results = runner.benchmark_all(runs=args.benchmark_runs, timeout=args.benchmark_timeout)
+
+        elif args.benchmark_year:
+            # Benchmark specific year
+            results = runner.benchmark_year(args.benchmark_year, runs=args.benchmark_runs, timeout=args.benchmark_timeout)
+
+        elif args.benchmark:
+            # Benchmark specific problem/day
+            if args.year is None or args.day is None:
+                print("❌ Benchmark requires specifying year and day")
+                print("Examples:")
+                print("  python main.py 2025 1 --benchmark              # Benchmark both parts of day 1")
+                print("  python main.py 2025 1 --benchmark --part 1     # Benchmark only part 1")
+                print("  python main.py --benchmark-year 2025           # Benchmark all of 2025")
+                print("  python main.py --benchmark-all                 # Benchmark everything")
+                return
+
+            if args.part:
+                # Benchmark single part
+                stats = runner.benchmark_problem(args.year, args.day, args.part,
+                                               runs=args.benchmark_runs,
+                                               warmup_runs=args.benchmark_warmup,
+                                               timeout=args.benchmark_timeout)
+                runner.print_benchmark_stats(f"{args.year} Day {args.day} Part {args.part}", stats)
+
+                # Convert single problem result to nested dict format for saving
+                results = {args.year: {args.day: {args.part: stats}}}
+            else:
+                # Benchmark full day (both parts)
+                results = {args.year: runner.benchmark_day(args.year, args.day, runs=args.benchmark_runs, timeout=args.benchmark_timeout)}
+
+        # Save results if requested
+        if args.benchmark_save and results:
+            filename = None if args.benchmark_save == 'auto' else args.benchmark_save
+            runner.save_benchmark_results(results, filename)
 
         return
 
