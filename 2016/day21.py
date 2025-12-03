@@ -1,5 +1,4 @@
 from typing import Any
-from itertools import permutations
 
 
 def solve_part_1(input_data: str) -> Any:
@@ -16,6 +15,7 @@ def solve_part_1(input_data: str) -> Any:
         elif 'rotate based' in l:
             x = s.index(p[-1])
             r = 1 + x + (1 if x >= 4 else 0)
+            r = r % len(s)
             s = s[-r:] + s[:-r]
         elif 'rotate' in l:
             r = int(p[2])
@@ -50,6 +50,7 @@ def solve_part_2(input_data: str) -> Any:
                 t = s[r:] + s[:r]
                 x = t.index(c)
                 rt = 1 + x + (1 if x >= 4 else 0)
+                rt = rt % len(s)
                 if t[-rt:] + t[:-rt] == s:
                     s = t
                     break
