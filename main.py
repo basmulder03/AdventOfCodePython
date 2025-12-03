@@ -4,7 +4,7 @@ from pathlib import Path
 from time import perf_counter
 from typing import Any, Optional, Tuple
 from datetime import datetime
-from input import get_input
+from input import get_input, is_input_available
 from tracking import AOCTracker
 from submitter import AOCSubmitter
 
@@ -69,6 +69,19 @@ def create_solution_file(year: int, day: int) -> None:
             "    pass\n"
         )
         solution_file.write_text(template)
+
+        # Attempt to download input if available
+        if is_input_available(year, day):
+            try:
+                print(f"Input is available for {year} day {day}. Downloading...")
+                get_input(year, day, sample=False)
+                print(f"✓ Input downloaded for {year} day {day}")
+            except Exception as e:
+                print(f"⚠ Failed to download input for {year} day {day}: {e}")
+                print("You can download it manually later by running the solution.")
+        else:
+            print(f"Input not yet available for {year} day {day}. It will be available at 5 AM UTC (6 AM local time).")
+            print("Run the solution again after the input becomes available to download it automatically.")
 
 
 def get_input_data(args: argparse.Namespace) -> str:

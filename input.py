@@ -1,5 +1,18 @@
 import os
 import requests
+from datetime import datetime, timezone, timedelta
+
+
+def is_input_available(year: int, day: int) -> bool:
+    """Check if input is available for the given year and day.
+
+    Input becomes available at 5 AM UTC on each day in December.
+    """
+    # Puzzle releases at 5 AM UTC
+    puzzle_release_utc = datetime(year, 12, day, 5, 0, tzinfo=timezone.utc)
+    current_time_utc = datetime.now(timezone.utc)
+
+    return current_time_utc >= puzzle_release_utc
 
 
 def get_input(year: int, day: int, sample: bool = False) -> str:
