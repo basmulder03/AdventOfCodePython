@@ -71,18 +71,18 @@ python main.py --update-markdown --markdown-all
 | Year | Stars ⭐ | Problems 🧩 | Runs 🏃 | Success Rate | Avg Time ⚡ | Fastest 🚀 | Slowest 🐌 |
 |------|----------|-------------|---------|--------------|-------------|------------|------------|
 | [2025](./docs/2025-results.md) | 0 | 6 | 22 | 86.4% | 116.7ms | 556.5μs | 771.9ms |
-| [2016](./docs/2016-results.md) | 4 | 4 | 10 | 100.0% | 111.4μs | 37.0μs | 232.4μs |
+| [2016](./docs/2016-results.md) | 6 | 6 | 16 | 100.0% | 310.6μs | 37.0μs | 1.2ms |
 | [2015](./docs/2015-results.md) | 50 | 50 | 600 | 95.2% | 346.4ms | 0.2μs | 11.54s |
 
 ### Overall Totals
-- ⭐ **Total Stars**: 54
-- 🧩 **Total Problems Solved**: 60
-- 🏃 **Total Runs**: 632 (94.9% success)
-- ⚡ **Average Time**: 333.3ms
+- ⭐ **Total Stars**: 56
+- 🧩 **Total Problems Solved**: 62
+- 🏃 **Total Runs**: 638 (95.0% success)
+- ⚡ **Average Time**: 330.0ms
 - 🚀 **Fastest Time**: 0.2μs
 - 🐌 **Slowest Time**: 11.54s
 
-*Last updated: 2025-12-03 19:37:46*
+*Last updated: 2025-12-03 19:40:21*
 <!-- STATS_END -->
 
 ## 📋 Requirements
