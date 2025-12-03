@@ -65,7 +65,7 @@ python main.py --stats
 ## 🎄 Overall Statistics
 
 **Summary Across All Years (2015-2025):**
-- ⭐ Total Stars: 52
+- ⭐ Total Stars: 50
 - 🧩 Total Problems Solved: 56
 - 🏃 Total Runs: 118 (89.8% success)
 - ⚡ Average Time: 565.0ms
@@ -129,7 +129,7 @@ python main.py --stats
 | 24 | 130.9ms | 444.4ms | 575.3ms |
 | 25 | 709.4ms |   0.2μs | 709.4ms |
 
-*Last updated: 2025-12-03 16:07:54*
+*Last updated: 2025-12-03 16:12:04*
 <!-- STATS_END -->
 
 ## 📋 Requirements
