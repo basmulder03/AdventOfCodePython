@@ -4,12 +4,12 @@
 
 ## Year Summary
 
-- ⭐ **Stars**: 2
-- 🧩 **Problems Solved**: 2
-- 🏃 **Total Runs**: 4 (100.0% success)
-- ⚡ **Average Time**: 69.3μs
+- ⭐ **Stars**: 4
+- 🧩 **Problems Solved**: 4
+- 🏃 **Total Runs**: 10 (100.0% success)
+- ⚡ **Average Time**: 111.4μs
 - 🚀 **Fastest Time**: 37.0μs
-- 🐌 **Slowest Time**: 102.2μs
+- 🐌 **Slowest Time**: 232.4μs
 
 ## 💻 System Information
 
@@ -23,11 +23,12 @@
 | Day | Part 1 | Part 2 | Total | Status |
 |-----|--------|--------|-------|--------|
 |  1 |  37.0μs |  99.5μs | 136.5μs | ⭐⭐ |
+|  2 | 117.0μs | 224.4μs | 341.4μs | ⭐⭐ |
 
 ## Performance Distribution
 
-- 🚀 **Fast** (< 10ms): 2 problems
+- 🚀 **Fast** (< 10ms): 4 problems
 - ⚡ **Medium** (10ms - 1s): 0 problems
 - 🐌 **Slow** (≥ 1s): 0 problems
 
-*Last updated: 2025-12-03 19:34:41*
+*Last updated: 2025-12-03 19:37:46*
