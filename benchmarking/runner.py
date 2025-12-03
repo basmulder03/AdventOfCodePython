@@ -239,7 +239,7 @@ class BenchmarkRunner:
         )
 
     def benchmark_day(self, year: int, day: int, runs: int = 5, timeout: float = 30.0) -> Dict[int, BenchmarkStats]:
-        """Benchmark both parts of a specific day."""
+        """Benchmark available parts of a specific day."""
         results = {}
 
         print(f"\n{'='*60}")
@@ -249,14 +249,29 @@ class BenchmarkRunner:
             print(f"🎄 Benchmarking {year} Day {day}")
         print(f"{'='*60}")
 
-        for part in [1, 2]:
-            try:
-                stats = self.benchmark_problem(year, day, part, runs, timeout=timeout)
-                results[part] = stats
-                self.print_benchmark_stats(f"Part {part}", stats)
-            except Exception as e:
-                print(f"❌ Failed to benchmark Part {part}: {e}")
-                results[part] = BenchmarkStats(0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, [])
+        # Check which parts are available before benchmarking
+        try:
+            from core.solution_loader import SolutionLoader
+            loader = SolutionLoader()
+            module = loader.load_solution_module(year, day)
+
+            available_parts = loader.get_available_parts(module)
+
+            if not available_parts:
+                print(f"❌ No solve_part functions found for {year} Day {day}")
+                return results
+
+            for part in available_parts:
+                try:
+                    stats = self.benchmark_problem(year, day, part, runs, timeout=timeout)
+                    results[part] = stats
+                    self.print_benchmark_stats(f"Part {part}", stats)
+                except Exception as e:
+                    print(f"❌ Failed to benchmark Part {part}: {e}")
+                    results[part] = BenchmarkStats(0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, [])
+
+        except Exception as e:
+            print(f"❌ Failed to load module for {year} Day {day}: {e}")
 
         return results
 

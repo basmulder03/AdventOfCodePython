@@ -13,6 +13,14 @@ class SolutionLoader:
     def __init__(self):
         self.input_handler = InputHandler()
 
+    def get_available_parts(self, module: Any) -> list[int]:
+        """Get list of available parts (1, 2) in a solution module."""
+        available_parts = []
+        for part in [1, 2]:
+            if hasattr(module, f"solve_part_{part}"):
+                available_parts.append(part)
+        return available_parts
+
     def load_solution_module(self, year: int, day: int) -> Any:
         """Load the solution module for the given year and day."""
         module_name = f"{year}.day{day}"
@@ -41,11 +49,24 @@ class SolutionLoader:
                 "from typing import Any\n\n\n"
                 "def solve_part_1(input_data: str) -> Any:\n"
                 "    \"\"\"Solve part 1 of the challenge.\"\"\"\n"
-                "    pass\n\n\n"
-                "def solve_part_2(input_data: str) -> Any:\n"
-                "    \"\"\"Solve part 2 of the challenge.\"\"\"\n"
                 "    pass\n"
             )
+
+            # Day 25 traditionally only has one part in Advent of Code
+            if day != 25:
+                template += (
+                    "\n\n"
+                    "def solve_part_2(input_data: str) -> Any:\n"
+                    "    \"\"\"Solve part 2 of the challenge.\"\"\"\n"
+                    "    pass\n"
+                )
+            else:
+                template += (
+                    "\n\n"
+                    "# Note: Day 25 traditionally only has one part in Advent of Code\n"
+                    "# You get the second star for free after completing all other days!\n"
+                )
+
             solution_file.write_text(template)
 
             # Attempt to download input if available

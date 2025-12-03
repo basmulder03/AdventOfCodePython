@@ -148,16 +148,29 @@ def main() -> None:
 
     total_time = 0.0
 
-    # Run Part 1 if requested
-    if args.part is None or args.part == 1:
-        success, elapsed, result = handlers.run_part(module, 1, input_data, args.year, args.day,
-                                          tracker, submitter, args.submit, is_sample)
-        if success:
-            total_time += elapsed
+    # Determine which parts to run based on availability
+    available_parts = handlers.solution_loader.get_available_parts(module)
 
-    # Run Part 2 if requested
-    if args.part is None or args.part == 2:
-        success, elapsed, result = handlers.run_part(module, 2, input_data, args.year, args.day,
+    if not available_parts:
+        print(f"❌ No solve_part functions found in the solution file")
+        return
+
+    # Run requested parts
+    parts_to_run = []
+    if args.part is not None:
+        # Specific part requested
+        if args.part in available_parts:
+            parts_to_run = [args.part]
+        else:
+            print(f"❌ Part {args.part} is not available. Available parts: {', '.join(map(str, available_parts))}")
+            return
+    else:
+        # No specific part requested, run all available parts
+        parts_to_run = available_parts
+
+    # Run the determined parts
+    for part_num in parts_to_run:
+        success, elapsed, result = handlers.run_part(module, part_num, input_data, args.year, args.day,
                                           tracker, submitter, args.submit, is_sample)
         if success:
             total_time += elapsed
