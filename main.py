@@ -196,7 +196,7 @@ def run_part(module: Any, part_num: int, input_data: str, year: int, day: int,
         # Track the run
         if tracker:
             tracker.record_run(year, day, part_num, elapsed_time, result,
-                             input_data, code_content, is_successful)
+                             input_data, code_content, is_successful, is_sample=is_sample)
 
             # Get performance comparison (only for successful runs)
             perf_data = tracker.get_performance_comparison(year, day, part_num,
@@ -218,7 +218,7 @@ def run_part(module: Any, part_num: int, input_data: str, year: int, day: int,
             module_path = Path.cwd() / f"{year}" / f"day{day}.py"
             code_content = module_path.read_text() if module_path.exists() else ""
             tracker.record_run(year, day, part_num, 0, None, input_data,
-                             code_content, False, str(e))
+                             code_content, False, str(e), is_sample=is_sample)
 
         print_part_error(part_num, e)
         return False, 0.0, None

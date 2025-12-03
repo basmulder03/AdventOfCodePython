@@ -35,7 +35,8 @@ class AOCTracker:
                     input_hash TEXT NOT NULL,
                     code_hash TEXT NOT NULL,
                     success BOOLEAN NOT NULL,
-                    error_message TEXT
+                    error_message TEXT,
+                    is_sample BOOLEAN NOT NULL DEFAULT 0
                 )
             """)
 
@@ -66,6 +67,12 @@ class AOCTracker:
                 )
             """)
 
+            # Migration: Add is_sample column if it doesn't exist
+            cursor.execute("PRAGMA table_info(runs)")
+            columns = [column[1] for column in cursor.fetchall()]
+            if 'is_sample' not in columns:
+                cursor.execute("ALTER TABLE runs ADD COLUMN is_sample BOOLEAN NOT NULL DEFAULT 0")
+
             conn.commit()
 
     def _hash_content(self, content: str) -> str:
@@ -74,7 +81,7 @@ class AOCTracker:
 
     def record_run(self, year: int, day: int, part: int, execution_time: float,
                    result: Any, input_data: str, code_content: str,
-                   success: bool, error_message: str = None) -> int:
+                   success: bool, error_message: str = None, is_sample: bool = False) -> int:
         """Record a solution run in the database."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -84,11 +91,11 @@ class AOCTracker:
 
             cursor.execute("""
                 INSERT INTO runs (year, day, part, timestamp, execution_time_ms, 
-                                result, input_hash, code_hash, success, error_message)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                result, input_hash, code_hash, success, error_message, is_sample)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (year, day, part, datetime.now(), execution_time * 1000,
                   str(result) if result is not None else None, input_hash,
-                  code_hash, success, error_message))
+                  code_hash, success, error_message, is_sample))
 
             return cursor.lastrowid
 
@@ -100,11 +107,11 @@ class AOCTracker:
 
             code_hash = self._hash_content(code_content)
 
-            # Get best time for this solution
+            # Get best time for this solution (excluding sample runs)
             cursor.execute("""
                 SELECT MIN(execution_time_ms), COUNT(*) 
                 FROM runs 
-                WHERE year = ? AND day = ? AND part = ? AND success = 1
+                WHERE year = ? AND day = ? AND part = ? AND success = 1 AND is_sample = 0
             """, (year, day, part))
 
             best_result = cursor.fetchone()
@@ -114,11 +121,11 @@ class AOCTracker:
             best_time, total_runs = best_result
             current_time_ms = current_time * 1000
 
-            # Get previous run with same code
+            # Get previous run with same code (excluding sample runs)
             cursor.execute("""
                 SELECT execution_time_ms 
                 FROM runs 
-                WHERE year = ? AND day = ? AND part = ? AND code_hash = ? AND success = 1
+                WHERE year = ? AND day = ? AND part = ? AND code_hash = ? AND success = 1 AND is_sample = 0
                 ORDER BY timestamp DESC 
                 LIMIT 1 OFFSET 1
             """, (year, day, part, code_hash))
@@ -216,13 +223,13 @@ class AOCTracker:
             return cursor.fetchone() is not None
 
     def get_run_history(self, year: int, day: int, part: int, limit: int = 10) -> List[Dict]:
-        """Get recent run history for a problem."""
+        """Get recent run history for a problem (excluding sample runs)."""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute("""
                 SELECT timestamp, execution_time_ms, result, success, error_message
                 FROM runs 
-                WHERE year = ? AND day = ? AND part = ?
+                WHERE year = ? AND day = ? AND part = ? AND is_sample = 0
                 ORDER BY timestamp DESC 
                 LIMIT ?
             """, (year, day, part, limit))
@@ -243,7 +250,7 @@ class AOCTracker:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
 
-            where_clause = "WHERE success = 1"
+            where_clause = "WHERE success = 1 AND is_sample = 0"
             params = []
             if year:
                 where_clause += " AND year = ?"
