@@ -2,13 +2,31 @@ import os
 import requests
 
 
-def get_input(year: int, day: int) -> str:
-    filename = f"input/{year}/day{day}.txt"
+def get_input(year: int, day: int, sample: bool = False) -> str:
+    if sample:
+        filename = f"input/{year}/day{day}_sample.txt"
+    else:
+        filename = f"input/{year}/day{day}.txt"
     cookie_filename = "session_cookie.txt"
     if os.path.exists(filename):
         # Read the input data from the file
         with open(filename, "r") as f:
             return f.read()
+    elif sample:
+        # Create sample file if it doesn't exist
+        current_dir = os.getcwd()
+        for dir in filename.split("/")[:-1]:
+            if not dir in os.listdir(current_dir):
+                os.makedirs(os.path.join(current_dir, dir))
+            current_dir = os.path.join(current_dir, dir)
+
+        # Create empty sample file
+        with open(filename, "w") as f:
+            f.write("")
+
+        print(f"Created empty sample input file: {filename}")
+        print("Please add your sample input to this file and run again.")
+        return ""
     else:
         # Read the session cookie from the file or prompt the user for a new one
         if os.path.exists(cookie_filename):
