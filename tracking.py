@@ -174,14 +174,14 @@ class AOCTracker:
                     INSERT OR REPLACE INTO correct_answers (year, day, part, answer)
                     VALUES (?, ?, ?, ?)
                 """, (year, day, part, answer))
-
+                
                 # Update previous runs with the same result to be marked as successful
                 cursor.execute("""
                     UPDATE runs 
                     SET success = 1 
                     WHERE year = ? AND day = ? AND part = ? AND result = ? AND success = 0
                 """, (year, day, part, answer))
-
+            
             # If incorrect, mark runs with the same result as unsuccessful
             elif status == 'incorrect':
                 cursor.execute("""
