@@ -207,10 +207,13 @@ def main() -> None:
         # No specific part requested, run all available parts
         parts_to_run = available_parts
 
+    # Determine timeout setting
+    timeout = None if args.no_timeout else args.timeout
+
     # Run the determined parts
     for part_num in parts_to_run:
         success, elapsed, result = handlers.run_part(module, part_num, input_data, args.year, args.day,
-                                          tracker, submitter, args.submit, is_sample)
+                                          tracker, submitter, args.submit, is_sample, timeout)
         if success:
             total_time += elapsed
 

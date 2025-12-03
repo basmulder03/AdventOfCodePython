@@ -214,10 +214,11 @@ For more examples: python benchmarking/quick.py --examples
 
     def run_part(self, module: Any, part_num: int, input_data: str, year: int, day: int,
                 tracker: Optional[AOCTracker], submitter: Optional[AOCSubmitter],
-                should_submit: bool, is_sample: bool) -> Tuple[bool, float, Any]:
-        """Run a single part of the solution."""
+                should_submit: bool, is_sample: bool, timeout: Optional[float] = None) -> Tuple[bool, float, Any]:
+        """Run a single part of the solution with optional timeout."""
         from time import perf_counter
         import inspect
+        import threading
 
         # Get the code content for tracking
         code_content = ""
@@ -240,10 +241,43 @@ For more examples: python benchmarking/quick.py --examples
 
             func = getattr(module, func_name)
 
-            start_time = perf_counter()
-            result = func(input_data)
-            end_time = perf_counter()
-            elapsed_time = end_time - start_time
+            # Execute function with optional timeout
+            result = None
+            elapsed_time = 0.0
+            exception = None
+
+            if timeout is not None and timeout > 0:
+                # Use threading for cross-platform timeout support
+                result_container = [None]
+                exception_container = [None]
+
+                def run_func():
+                    try:
+                        result_container[0] = func(input_data)
+                    except Exception as e:
+                        exception_container[0] = e
+
+                start_time = perf_counter()
+                thread = threading.Thread(target=run_func, daemon=True)
+                thread.start()
+                thread.join(timeout)
+                end_time = perf_counter()
+                elapsed_time = end_time - start_time
+
+                if thread.is_alive():
+                    # Timeout occurred
+                    raise TimeoutError(f"Solution execution timed out after {timeout} seconds")
+
+                if exception_container[0]:
+                    raise exception_container[0]
+
+                result = result_container[0]
+            else:
+                # No timeout - run directly
+                start_time = perf_counter()
+                result = func(input_data)
+                end_time = perf_counter()
+                elapsed_time = end_time - start_time
 
             self.display.print_part_result(part_num, result, elapsed_time, tracker, year, day, code_content)
 

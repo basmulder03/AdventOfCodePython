@@ -32,6 +32,10 @@ class ArgumentParser:
                            help="filter stats by specific year (used with --stats)")
         parser.add_argument("--sync", type=int,
                            help="sync already completed problems from AOC website for specified year")
+        parser.add_argument("--timeout", type=float, default=5.0,
+                           help="timeout for solution execution in seconds (default: 5.0)")
+        parser.add_argument("--no-timeout", action="store_true",
+                           help="disable timeout for solution execution")
 
         # Markdown update arguments
         parser.add_argument("--update-markdown", action="store_true",
