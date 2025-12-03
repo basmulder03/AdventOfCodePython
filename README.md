@@ -65,11 +65,11 @@ python main.py --stats
 ## 🎄 Overall Statistics
 
 **Summary Across All Years (2015-2025):**
-- ⭐ Total Stars: 48
-- 🧩 Total Problems Solved: 48
-- 🏃 Total Runs: 67 (100.0% success)
-- ⚡ Average Time: 786.3ms
-- 🚀 Fastest Time: 0.010ms
+- ⭐ Total Stars: 50
+- 🧩 Total Problems Solved: 54
+- 🏃 Total Runs: 108 (88.9% success)
+- ⚡ Average Time: 577.8ms
+- 🚀 Fastest Time: 10.0μs
 - 🐌 Slowest Time: 11.54s
 
 
@@ -77,55 +77,58 @@ python main.py --stats
 
 **Year Summary:**
 - ⭐ Stars: 0
-- 🧩 Problems Solved: 2
-- 🏃 Total Runs: 4 (100.0% success)
-- ⚡ Average Time: 2.6ms
-- 🚀 Fastest Time: 1.7ms
+- 🧩 Problems Solved: 6
+- 🏃 Total Runs: 18 (83.3% success)
+- ⚡ Average Time: 147.7ms
+- 🚀 Fastest Time: 556.5μs
 
 **Best Times by Day:**
 
 | Day | Part 1 | Part 2 | Total |
 |-----|--------|--------|-------|
+|  1 | 556.5μs | 750.7μs |   1.3ms |
+|  2 | 295.2ms | 768.3ms |   1.06s |
 |  3 |   1.7ms |   2.3ms |   4.0ms |
 
 ## 2015 Statistics
 
 **Year Summary:**
-- ⭐ Stars: 46
-- 🧩 Problems Solved: 46
-- 🏃 Total Runs: 63 (100.0% success)
-- ⚡ Average Time: 836.1ms
-- 🚀 Fastest Time: 0.010ms
+- ⭐ Stars: 48
+- 🧩 Problems Solved: 48
+- 🏃 Total Runs: 90 (90.0% success)
+- ⚡ Average Time: 657.4ms
+- 🚀 Fastest Time: 10.0μs
 
 **Best Times by Day:**
 
 | Day | Part 1 | Part 2 | Total |
 |-----|--------|--------|-------|
-|  1 | 0.326ms | 0.090ms | 0.415ms |
-|  2 |   1.9ms | 0.488ms |   2.4ms |
+|  1 | 196.6μs |  89.8μs | 286.4μs |
+|  2 |   1.9ms | 487.7μs |   2.4ms |
 |  3 |   4.5ms |   3.7ms |   8.2ms |
 |  4 |  68.0ms |   2.18s |   2.25s |
 |  5 |   2.8ms |   8.2ms |  11.0ms |
 |  6 |  73.3ms |  18.2ms |  91.5ms |
-|  7 | 0.281ms | 0.502ms | 0.782ms |
-|  8 | 0.622ms | 0.320ms | 0.942ms |
+|  7 | 280.7μs | 501.8μs | 782.5μs |
+|  8 | 622.3μs | 320.2μs | 942.5μs |
 |  9 |  33.8ms |  23.0ms |  56.8ms |
 | 10 | 122.3ms |   2.28s |   2.40s |
 | 11 |  19.8ms | 573.9ms | 593.7ms |
 | 12 |   2.4ms |   1.4ms |   3.7ms |
 | 13 |  19.2ms |  67.6ms |  86.8ms |
-| 14 | 0.406ms |  11.0ms |  11.4ms |
+| 14 | 406.2μs |  11.0ms |  11.4ms |
 | 15 | 407.4ms | 450.1ms | 857.5ms |
-| 16 | 0.320ms | 0.690ms |   1.0ms |
+| 16 | 320.1μs | 689.6μs |   1.0ms |
 | 17 |  17.9ms |  10.4ms |  28.3ms |
 | 18 | 909.3ms | 913.9ms |   1.82s |
-| 19 | 0.355ms |   1.5ms |   1.8ms |
+| 19 | 355.4μs |   1.5ms |   1.8ms |
 | 20 |   2.16s |   6.18s |   8.34s |
 | 21 |   1.5ms |   2.6ms |   4.1ms |
 | 22 |  14.9ms |   5.6ms |  20.5ms |
-| 23 | 0.010ms | 0.022ms | 0.032ms |
+| 23 |  10.0μs |  22.4μs |  32.4μs |
+| 24 | 130.9ms | 444.4ms | 575.3ms |
 
-*Last updated: 2025-12-03 14:38:16*
+*Last updated: 2025-12-03 15:57:52*
 <!-- STATS_END -->
 
 ## 📋 Requirements
