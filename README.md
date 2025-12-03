@@ -65,11 +65,11 @@ python main.py --stats
 ## 🎄 Overall Statistics
 
 **Summary Across All Years (2015-2025):**
-- ⭐ Total Stars: 50
-- 🧩 Total Problems Solved: 54
-- 🏃 Total Runs: 108 (88.9% success)
-- ⚡ Average Time: 577.8ms
-- 🚀 Fastest Time: 10.0μs
+- ⭐ Total Stars: 52
+- 🧩 Total Problems Solved: 56
+- 🏃 Total Runs: 118 (89.8% success)
+- ⚡ Average Time: 565.0ms
+- 🚀 Fastest Time: 0.2μs
 - 🐌 Slowest Time: 11.54s
 
 
@@ -93,11 +93,11 @@ python main.py --stats
 ## 2015 Statistics
 
 **Year Summary:**
-- ⭐ Stars: 48
-- 🧩 Problems Solved: 48
-- 🏃 Total Runs: 90 (90.0% success)
-- ⚡ Average Time: 657.4ms
-- 🚀 Fastest Time: 10.0μs
+- ⭐ Stars: 50
+- 🧩 Problems Solved: 50
+- 🏃 Total Runs: 100 (91.0% success)
+- ⚡ Average Time: 633.8ms
+- 🚀 Fastest Time: 0.2μs
 
 **Best Times by Day:**
 
@@ -127,8 +127,9 @@ python main.py --stats
 | 22 |  14.9ms |   5.6ms |  20.5ms |
 | 23 |  10.0μs |  22.4μs |  32.4μs |
 | 24 | 130.9ms | 444.4ms | 575.3ms |
+| 25 | 709.4ms |   0.2μs | 709.4ms |
 
-*Last updated: 2025-12-03 15:57:52*
+*Last updated: 2025-12-03 16:07:54*
 <!-- STATS_END -->
 
 ## 📋 Requirements
