@@ -52,10 +52,20 @@ from .results import BenchmarkResult, BenchmarkStats
 class BenchmarkRunner:
     """Main benchmarking class."""
 
-    def __init__(self, tracker: AOCTracker = None, publish_to_db: bool = False):
+    def __init__(self, tracker: AOCTracker = None, publish_to_db: bool = False, expected_values: Dict[int, str] = None):
         self.results: List[BenchmarkResult] = []
         self.tracker = tracker
         self.publish_to_db = publish_to_db
+        self.expected_values = expected_values or {}
+
+    def validate_result(self, result: Any, part: int) -> bool:
+        """Validate result against expected value if configured."""
+        if part not in self.expected_values:
+            return True  # No validation requested
+
+        expected = self.expected_values[part].strip()
+        actual = str(result).strip()
+        return actual == expected
 
     def load_solution_module(self, year: int, day: int) -> Any:
         """Load the solution module for the given year and day."""
@@ -143,8 +153,14 @@ class BenchmarkRunner:
                     success=False,
                     result=None,
                     execution_time=execution_time,
-                    error_message=f"Execution too slow: {execution_time:.1f}s > {timeout}s"
+                    error_message=f"Execution too slow: {execution_time:.1f}s > {timeout}s",
+                    validation_passed=None
                 )
+
+            # Validate result if expected value is configured
+            validation_passed = None
+            if part in self.expected_values:
+                validation_passed = self.validate_result(result, part)
 
             return BenchmarkResult(
                 year=year,
@@ -152,7 +168,8 @@ class BenchmarkRunner:
                 part=part,
                 success=True,
                 result=result,
-                execution_time=execution_time
+                execution_time=execution_time,
+                validation_passed=validation_passed
             )
 
         except Exception as e:
@@ -166,7 +183,8 @@ class BenchmarkRunner:
                 success=False,
                 result=None,
                 execution_time=0.0,
-                error_message=str(e)
+                error_message=str(e),
+                validation_passed=None
             )
 
     def benchmark_problem(self, year: int, day: int, part: int,
@@ -194,7 +212,10 @@ class BenchmarkRunner:
         for i in range(warmup_runs):
             result = self.run_single_benchmark(year, day, part, input_data, module, timeout)
             if result.success:
-                print(f"  Warmup {i+1}/{warmup_runs}: {result.execution_time*1000:.3f}ms")
+                validation_indicator = ""
+                if result.validation_passed is not None:
+                    validation_indicator = " ✅" if result.validation_passed else " ❌"
+                print(f"  Warmup {i+1}/{warmup_runs}: {result.execution_time*1000:.3f}ms{validation_indicator}")
             else:
                 print(f"  Warmup {i+1}/{warmup_runs}: ❌ {result.error_message}")
 
@@ -208,7 +229,10 @@ class BenchmarkRunner:
                 self.publish_result_to_db(result, input_data, code_content)
 
             if result.success:
-                print(f"  Run {i+1}/{runs}: {result.execution_time*1000:.3f}ms")
+                validation_indicator = ""
+                if result.validation_passed is not None:
+                    validation_indicator = " ✅" if result.validation_passed else " ❌"
+                print(f"  Run {i+1}/{runs}: {result.execution_time*1000:.3f}ms{validation_indicator}")
             else:
                 print(f"  Run {i+1}/{runs}: ❌ {result.error_message}")
 
@@ -226,6 +250,11 @@ class BenchmarkRunner:
         else:
             min_time = max_time = mean_time = median_time = std_dev = 0.0
 
+        # Calculate validation statistics
+        validation_enabled = part in self.expected_values
+        validation_passed_count = sum(1 for r in all_results if r.validation_passed is True)
+        expected_value = self.expected_values.get(part)
+
         return BenchmarkStats(
             runs=runs,
             success_count=success_count,
@@ -235,7 +264,10 @@ class BenchmarkRunner:
             mean_time=mean_time,
             median_time=median_time,
             std_dev=std_dev,
-            times=successful_times
+            times=successful_times,
+            validation_enabled=validation_enabled,
+            validation_passed_count=validation_passed_count,
+            expected_value=expected_value
         )
 
     def benchmark_day(self, year: int, day: int, runs: int = 5, timeout: float = 30.0) -> Dict[int, BenchmarkStats]:
@@ -352,6 +384,16 @@ class BenchmarkRunner:
             return
 
         print(f"  Success Rate: {stats.success_rate*100:.1f}% ({stats.success_count}/{stats.runs})")
+
+        # Display validation results if enabled
+        if stats.validation_enabled:
+            validation_rate = stats.validation_passed_count / stats.success_count * 100 if stats.success_count > 0 else 0
+            if stats.validation_passed_count == stats.success_count:
+                print(f"  Validation:   ✅ {stats.validation_passed_count}/{stats.success_count} passed (expected: {stats.expected_value})")
+            else:
+                print(f"  Validation:   ❌ {stats.validation_passed_count}/{stats.success_count} passed ({validation_rate:.1f}%)")
+                print(f"                Expected: {stats.expected_value}")
+
         print(f"  Min Time:     {stats.min_time*1000:.3f}ms")
         print(f"  Max Time:     {stats.max_time*1000:.3f}ms")
         print(f"  Mean Time:    {stats.mean_time*1000:.3f}ms")

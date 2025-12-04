@@ -14,6 +14,7 @@ Welcome to the Advent of Code Python Solutions documentation!
 - **[Performance Tracking](tracking.md)** - Understanding the tracking system
 
 ### Advanced Features
+- **[Output Validation](validation.md)** - Validate solution outputs against expected values
 - **[Benchmarking](benchmarking.md)** - Performance benchmarking documentation
 - **[Database Publishing](database-publishing.md)** - Publishing benchmark results to database
 - **[Statistics Generation](statistics.md)** - How statistics are generated and displayed

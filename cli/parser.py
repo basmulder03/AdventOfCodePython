@@ -33,6 +33,10 @@ Examples:
   python main.py 2025 1 --part 1                 # Run part 1 only
   python main.py 2025 1 -s                       # Run with sample input
   
+  # Run with validation
+  python main.py 2025 1 --expected-p1 123 --expected-p2 456
+  python main.py 2025 1 --part 1 --expected 123
+  
   # Other commands (use subcommands):
   python main.py sync 2025                       # Sync year 2025 from AOC website
   python main.py benchmark 2025 1                # Benchmark day 1
@@ -62,6 +66,12 @@ Examples:
                            help="timeout for solution execution in seconds (default: 5.0)")
         parser.add_argument("--no-timeout", action="store_true",
                            help="disable timeout for solution execution")
+        parser.add_argument("--expected", type=str,
+                           help="expected output value to validate against")
+        parser.add_argument("--expected-p1", type=str,
+                           help="expected output value for part 1")
+        parser.add_argument("--expected-p2", type=str,
+                           help="expected output value for part 2")
 
         return parser
 
@@ -93,6 +103,10 @@ Examples:
   python main.py benchmark --all               # Benchmark everything
   python main.py benchmark 2025 1 --save       # Save results to file
   python main.py benchmark 2025 1 --publish    # Publish to database
+  
+  # With validation
+  python main.py benchmark 2025 1 --expected-p1 123 --expected-p2 456
+  python main.py benchmark 2025 1 --part 1 --expected 123
                                                  """)
         benchmark_parser.add_argument('year', type=int, nargs='?', help='Year to benchmark')
         benchmark_parser.add_argument('day', type=int, nargs='?', help='Day to benchmark')
@@ -116,6 +130,12 @@ Examples:
                                      help="show detailed benchmarking help and examples")
         benchmark_parser.add_argument("--no-tracking", action="store_true",
                                      help="disable run tracking and performance comparison")
+        benchmark_parser.add_argument("--expected", type=str,
+                                     help="expected output value to validate against")
+        benchmark_parser.add_argument("--expected-p1", type=str,
+                                     help="expected output value for part 1")
+        benchmark_parser.add_argument("--expected-p2", type=str,
+                                     help="expected output value for part 2")
 
         # STATS subcommand
         stats_parser = subparsers.add_parser('stats', help='Show statistics from tracked data')

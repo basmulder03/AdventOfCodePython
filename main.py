@@ -51,13 +51,25 @@ def main() -> None:
         # Initialize tracker for benchmarking if publishing is requested
         publish = hasattr(args, 'publish') and args.publish
         benchmark_tracker = tracker if publish else None
-        runner = BenchmarkRunner(tracker=benchmark_tracker, publish_to_db=publish)
+
+        # Get expected values if provided
+        expected_values = {}
+        if hasattr(args, 'expected') and args.expected:
+            # Single expected value - use for the part being run if specified
+            if hasattr(args, 'part') and args.part:
+                expected_values[args.part] = args.expected
+        if hasattr(args, 'expected_p1') and args.expected_p1:
+            expected_values[1] = args.expected_p1
+        if hasattr(args, 'expected_p2') and args.expected_p2:
+            expected_values[2] = args.expected_p2
+
+        runner = BenchmarkRunner(tracker=benchmark_tracker, publish_to_db=publish, expected_values=expected_values)
         results = None
 
         if publish and not tracker:
             print("⚠️  Database publishing requires tracking to be enabled (remove --no-tracking)")
             print("   Continuing without database publishing...")
-            runner = BenchmarkRunner()
+            runner = BenchmarkRunner(expected_values=expected_values)
 
         # Determine scope
         if args.all:
@@ -229,10 +241,22 @@ def main() -> None:
     # Determine timeout setting
     timeout = None if args.no_timeout else args.timeout
 
+    # Get expected values if provided
+    expected_values = {}
+    if hasattr(args, 'expected') and args.expected:
+        # Single expected value - use for the part being run
+        if args.part:
+            expected_values[args.part] = args.expected
+    if hasattr(args, 'expected_p1') and args.expected_p1:
+        expected_values[1] = args.expected_p1
+    if hasattr(args, 'expected_p2') and args.expected_p2:
+        expected_values[2] = args.expected_p2
+
     # Run the determined parts
     for part_num in parts_to_run:
+        expected_value = expected_values.get(part_num)
         success, elapsed, result = handlers.run_part(module, part_num, input_data, args.year, args.day,
-                                          tracker, submitter, args.submit, is_sample, timeout)
+                                          tracker, submitter, args.submit, is_sample, timeout, expected_value)
         if success:
             total_time += elapsed
 

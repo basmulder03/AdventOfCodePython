@@ -27,7 +27,31 @@ python main.py 2025 1 --no-timeout
 
 # Custom timeout
 python main.py 2025 1 --timeout 10.0
+
+# Validate output
+python main.py 2025 1 --part 1 --expected 12345
+python main.py 2025 1 --expected-p1 12345 --expected-p2 67890
 ```
+
+## Output Validation
+
+Validate solution outputs against expected values:
+
+```bash
+# Validate single part
+python main.py 2025 1 --part 1 --expected 12345
+
+# Validate both parts
+python main.py 2025 1 --expected-p1 12345 --expected-p2 67890
+
+# With sample input
+python main.py 2025 1 --sample-input "test" --expected-p1 100 --expected-p2 200
+
+# In benchmark mode
+python main.py benchmark 2025 1 --expected-p1 12345 --expected-p2 67890
+```
+
+See [validation.md](validation.md) for detailed documentation.
 
 ## Sync Command
 

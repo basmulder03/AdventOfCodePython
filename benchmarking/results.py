@@ -15,6 +15,7 @@ class BenchmarkResult:
     result: Any
     execution_time: float  # in seconds
     error_message: Optional[str] = None
+    validation_passed: Optional[bool] = None  # None if no validation requested
 
 
 @dataclass
@@ -29,3 +30,6 @@ class BenchmarkStats:
     median_time: float
     std_dev: float
     times: List[float]  # All successful run times
+    validation_enabled: bool = False
+    validation_passed_count: int = 0
+    expected_value: Optional[str] = None

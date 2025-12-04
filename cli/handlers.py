@@ -20,6 +20,23 @@ class CommandHandlers:
         self.solution_loader = SolutionLoader()
         self.input_handler = InputHandler()
 
+    def validate_output(self, result: Any, expected: str, part_num: int) -> bool:
+        """
+        Validate the output against expected value.
+        Returns True if validation passes, False otherwise.
+        """
+        actual = str(result).strip()
+        expected = expected.strip()
+
+        if actual == expected:
+            print(f"✅ Part {part_num} validation PASSED: {actual}")
+            return True
+        else:
+            print(f"❌ Part {part_num} validation FAILED:")
+            print(f"   Expected: {expected}")
+            print(f"   Got:      {actual}")
+            return False
+
     def handle_benchmark_help(self) -> None:
         """Show comprehensive benchmarking help."""
         help_text = """
@@ -215,7 +232,8 @@ For more examples: python benchmarking/quick.py --examples
 
     def run_part(self, module: Any, part_num: int, input_data: str, year: int, day: int,
                 tracker: Optional[AOCTracker], submitter: Optional[AOCSubmitter],
-                should_submit: bool, is_sample: bool, timeout: Optional[float] = None) -> Tuple[bool, float, Any]:
+                should_submit: bool, is_sample: bool, timeout: Optional[float] = None,
+                expected_value: Optional[str] = None) -> Tuple[bool, float, Any]:
         """Run a single part of the solution with optional timeout."""
         from time import perf_counter
         import inspect
@@ -281,6 +299,11 @@ For more examples: python benchmarking/quick.py --examples
                 elapsed_time = end_time - start_time
 
             self.display.print_part_result(part_num, result, elapsed_time, tracker, year, day, code_content)
+
+            # Validate output if expected value is provided
+            validation_passed = True
+            if expected_value is not None:
+                validation_passed = self.validate_output(result, expected_value, part_num)
 
             # Track the run if tracking is enabled
             if tracker and not is_sample:
