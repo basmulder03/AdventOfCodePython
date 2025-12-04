@@ -2,43 +2,39 @@ from typing import Any
 
 
 def solve_part_1(input_data: str) -> Any:
-    r = input_data.strip()
-    c = r.count('.')
+    row = [c == '^' for c in input_data.strip()]
+    safe_count = sum(not trap for trap in row)
+
     for _ in range(39):
-        nr = ''
-        for i in range(len(r)):
-            l = r[i-1] if i > 0 else '.'
-            ct = r[i]
-            rt = r[i+1] if i < len(r)-1 else '.'
-            if (l == '^' and ct == '^' and rt == '.') or \
-               (l == '.' and ct == '^' and rt == '^') or \
-               (l == '^' and ct == '.' and rt == '.') or \
-               (l == '.' and ct == '.' and rt == '^'):
-                nr += '^'
-            else:
-                nr += '.'
-                c += 1
-        r = nr
-    return c
+        new_row = []
+        for i in range(len(row)):
+            left = row[i-1] if i > 0 else False
+            right = row[i+1] if i < len(row)-1 else False
+            # Trap if left XOR right (one is trap, other is safe)
+            is_trap = left != right
+            new_row.append(is_trap)
+            if not is_trap:
+                safe_count += 1
+        row = new_row
+
+    return safe_count
 
 
 def solve_part_2(input_data: str) -> Any:
-    r = input_data.strip()
-    c = r.count('.')
+    row = [c == '^' for c in input_data.strip()]
+    safe_count = sum(not trap for trap in row)
+
     for _ in range(399999):
-        nr = ''
-        for i in range(len(r)):
-            l = r[i-1] if i > 0 else '.'
-            ct = r[i]
-            rt = r[i+1] if i < len(r)-1 else '.'
-            if (l == '^' and ct == '^' and rt == '.') or \
-               (l == '.' and ct == '^' and rt == '^') or \
-               (l == '^' and ct == '.' and rt == '.') or \
-               (l == '.' and ct == '.' and rt == '^'):
-                nr += '^'
-            else:
-                nr += '.'
-                c += 1
-        r = nr
-    return c
+        new_row = []
+        for i in range(len(row)):
+            left = row[i-1] if i > 0 else False
+            right = row[i+1] if i < len(row)-1 else False
+            # Trap if left XOR right (one is trap, other is safe)
+            is_trap = left != right
+            new_row.append(is_trap)
+            if not is_trap:
+                safe_count += 1
+        row = new_row
+
+    return safe_count
 
