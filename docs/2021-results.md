@@ -7,8 +7,8 @@
 - ⭐ **Stars**: 6
 - 🧩 **Problems Solved**: 6
 - 🏃 **Total Runs**: 140 (85.7% success)
-- ⚡ **Average Time**: 607.5μs
-- 🚀 **Fastest Time**: 192.7μs
+- ⚡ **Average Time**: 0.6ms
+- 🚀 **Fastest Time**: 0.2ms
 - 🐌 **Slowest Time**: 3.3ms
 
 ## 💻 System Information
@@ -22,9 +22,9 @@
 
 | Day | Part 1 | Part 2 | Total | Status |
 |-----|--------|--------|-------|--------|
-|  1 | 192.7μs | 253.1μs | 445.8μs | ⭐⭐ |
-|  2 | 192.7μs | 234.8μs | 427.5μs | ⭐⭐ |
-|  3 | 836.2μs | 250.0μs |   1.1ms | ⭐⭐ |
+|  1 |   0.2ms |   0.3ms |   0.4ms | ⭐⭐ |
+|  2 |   0.2ms |   0.2ms |   0.4ms | ⭐⭐ |
+|  3 |   0.8ms |   0.3ms |   1.1ms | ⭐⭐ |
 
 ## Performance Distribution
 
@@ -32,4 +32,4 @@
 - ⚡ **Medium** (10ms - 1s): 0 problems
 - 🐌 **Slow** (≥ 1s): 0 problems
 
-*Last updated: 2025-12-04 08:32:38*
+*Last updated: 2025-12-04 08:39:37*

@@ -5,7 +5,7 @@ Time formatting utilities.
 
 def format_time(ms: float) -> str:
     """Format milliseconds into human-readable time string."""
-    if ms < 1:
+    if ms < 0.05:  # Less than 0.05ms (50μs) show as microseconds
         return f"{ms * 1000:.1f}μs"
     elif ms < 1000:
         return f"{ms:.1f}ms"
