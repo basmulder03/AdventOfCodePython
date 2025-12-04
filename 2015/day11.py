@@ -9,6 +9,12 @@ def increment_password(password):
             i -= 1
         else:
             password[i] = chr(ord(password[i]) + 1)
+            # Skip forbidden letters
+            if password[i] in 'iol':
+                password[i] = chr(ord(password[i]) + 1)
+                # Set all following characters to 'a'
+                for j in range(i + 1, len(password)):
+                    password[j] = 'a'
             break
 
     return ''.join(password)
@@ -40,9 +46,14 @@ def has_two_pairs(password):
 
 def is_valid_password(password):
     """Check if password meets all requirements."""
-    return (has_straight(password) and
-            not has_forbidden_letters(password) and
-            has_two_pairs(password))
+    # Check forbidden letters first (fastest check)
+    if has_forbidden_letters(password):
+        return False
+    # Check pairs next (relatively fast)
+    if not has_two_pairs(password):
+        return False
+    # Check straight last (most expensive)
+    return has_straight(password)
 
 def find_next_valid_password(password):
     """Find the next valid password after the given password."""

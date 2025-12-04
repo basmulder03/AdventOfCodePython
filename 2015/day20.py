@@ -1,53 +1,37 @@
 def solve_part_1(input_data):
     target = int(input_data.strip())
 
-    max_house = min(target // 20, 800000)
+    # Better upper bound - the answer is typically around target // 36 to target // 40
+    max_house = target // 10
 
     presents = [0] * (max_house + 1)
-    min_answer = max_house + 1
 
-    batch_size = 5000
-    for batch_start in range(1, max_house + 1, batch_size):
-        batch_end = min(batch_start + batch_size, max_house + 1)
+    # Sieve approach: each elf delivers to houses that are multiples
+    for elf in range(1, max_house + 1):
+        for house in range(elf, max_house + 1, elf):
+            presents[house] += elf * 10
 
-        for elf in range(batch_start, batch_end):
-            if elf >= min_answer:
-                break
+    # Find first house with enough presents
+    for house in range(1, max_house + 1):
+        if presents[house] >= target:
+            return house
 
-            for house in range(elf, min(min_answer, max_house + 1), elf):
-                presents[house] += 10 * elf
+    return None
 
-        check_end = min(batch_end * 2, min_answer, max_house + 1)
-        for house in range(batch_start, check_end):
-            if presents[house] >= target:
-                min_answer = min(min_answer, house)
-                break
-
-        if min_answer < batch_end:
-            return min_answer
-
-    return min_answer if min_answer <= max_house else None
 
 def solve_part_2(input_data):
     target = int(input_data.strip())
 
-    max_house = min(target // 11, 1000000)
+    max_house = target // 10
 
     presents = [0] * (max_house + 1)
 
+    # Each elf visits only 50 houses
     for elf in range(1, max_house + 1):
-        visits = 0
-        for house in range(elf, max_house + 1, elf):
-            if visits >= 50:
-                break
-            presents[house] += 11 * elf
-            visits += 1
+        for house in range(elf, min(elf * 50 + 1, max_house + 1), elf):
+            presents[house] += elf * 11
 
-        if elf % 5000 == 0:
-            for house in range(1, min(elf * 60, max_house + 1)):
-                if presents[house] >= target:
-                    return house
-
+    # Find first house with enough presents
     for house in range(1, max_house + 1):
         if presents[house] >= target:
             return house

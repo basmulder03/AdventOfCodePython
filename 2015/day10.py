@@ -1,5 +1,5 @@
 def look_and_say(s):
-    result = ""
+    result = []
     i = 0
     while i < len(s):
         current_digit = s[i]
@@ -10,10 +10,11 @@ def look_and_say(s):
             count += 1
 
         # Add count followed by the digit
-        result += str(count) + current_digit
+        result.append(str(count))
+        result.append(current_digit)
         i += count
 
-    return result
+    return ''.join(result)
 
 
 def apply_look_and_say(initial_sequence, iterations):

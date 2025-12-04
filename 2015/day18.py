@@ -1,97 +1,94 @@
 def solve_part_1(input_data):
     lines = input_data.strip().split('\n')
 
-    grid = []
-    for line in lines:
-        grid.append(list(line))
+    # Use a set to track lit lights
+    lights = set()
+    rows = len(lines)
+    cols = len(lines[0])
 
-    rows, cols = len(grid), len(grid[0])
+    for r, line in enumerate(lines):
+        for c, char in enumerate(line):
+            if char == '#':
+                lights.add((r, c))
 
-    for step in range(100):
-        new_grid = [['.'] * cols for _ in range(rows)]
+    for _ in range(100):
+        new_lights = set()
 
-        for r in range(rows):
-            for c in range(cols):
-                neighbors_on = 0
-                for dr in [-1, 0, 1]:
-                    for dc in [-1, 0, 1]:
-                        if dr == 0 and dc == 0:
-                            continue
-                        nr, nc = r + dr, c + dc
-                        if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == '#':
-                            neighbors_on += 1
+        # Check all cells that might change
+        cells_to_check = set()
+        for r, c in lights:
+            for dr in [-1, 0, 1]:
+                for dc in [-1, 0, 1]:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < rows and 0 <= nc < cols:
+                        cells_to_check.add((nr, nc))
 
-                if grid[r][c] == '#':
-                    if neighbors_on == 2 or neighbors_on == 3:
-                        new_grid[r][c] = '#'
-                    else:
-                        new_grid[r][c] = '.'
-                else:
-                    if neighbors_on == 3:
-                        new_grid[r][c] = '#'
-                    else:
-                        new_grid[r][c] = '.'
+        for r, c in cells_to_check:
+            neighbors_on = sum(
+                1 for dr in [-1, 0, 1] for dc in [-1, 0, 1]
+                if not (dr == 0 and dc == 0) and (r + dr, c + dc) in lights
+            )
 
-        grid = new_grid
+            if (r, c) in lights:
+                if neighbors_on == 2 or neighbors_on == 3:
+                    new_lights.add((r, c))
+            else:
+                if neighbors_on == 3:
+                    new_lights.add((r, c))
 
-    count = 0
-    for row in grid:
-        for cell in row:
-            if cell == '#':
-                count += 1
+        lights = new_lights
 
-    return count
+    return len(lights)
+
 
 def solve_part_2(input_data):
     lines = input_data.strip().split('\n')
 
-    grid = []
-    for line in lines:
-        grid.append(list(line))
+    # Use a set to track lit lights
+    lights = set()
+    rows = len(lines)
+    cols = len(lines[0])
 
-    rows, cols = len(grid), len(grid[0])
+    for r, line in enumerate(lines):
+        for c, char in enumerate(line):
+            if char == '#':
+                lights.add((r, c))
 
-    grid[0][0] = '#'
-    grid[0][cols-1] = '#'
-    grid[rows-1][0] = '#'
-    grid[rows-1][cols-1] = '#'
+    # Corners are always on
+    corners = {(0, 0), (0, cols-1), (rows-1, 0), (rows-1, cols-1)}
+    lights.update(corners)
 
-    for step in range(100):
-        new_grid = [['.'] * cols for _ in range(rows)]
+    for _ in range(100):
+        new_lights = set()
 
-        for r in range(rows):
-            for c in range(cols):
-                neighbors_on = 0
-                for dr in [-1, 0, 1]:
-                    for dc in [-1, 0, 1]:
-                        if dr == 0 and dc == 0:
-                            continue
-                        nr, nc = r + dr, c + dc
-                        if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == '#':
-                            neighbors_on += 1
+        # Check all cells that might change
+        cells_to_check = set()
+        for r, c in lights:
+            for dr in [-1, 0, 1]:
+                for dc in [-1, 0, 1]:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < rows and 0 <= nc < cols:
+                        cells_to_check.add((nr, nc))
 
-                if grid[r][c] == '#':
-                    if neighbors_on == 2 or neighbors_on == 3:
-                        new_grid[r][c] = '#'
-                    else:
-                        new_grid[r][c] = '.'
-                else:
-                    if neighbors_on == 3:
-                        new_grid[r][c] = '#'
-                    else:
-                        new_grid[r][c] = '.'
+        for r, c in cells_to_check:
+            # Corners are always on
+            if (r, c) in corners:
+                new_lights.add((r, c))
+                continue
 
-        grid = new_grid
+            neighbors_on = sum(
+                1 for dr in [-1, 0, 1] for dc in [-1, 0, 1]
+                if not (dr == 0 and dc == 0) and (r + dr, c + dc) in lights
+            )
 
-        grid[0][0] = '#'
-        grid[0][cols-1] = '#'
-        grid[rows-1][0] = '#'
-        grid[rows-1][cols-1] = '#'
+            if (r, c) in lights:
+                if neighbors_on == 2 or neighbors_on == 3:
+                    new_lights.add((r, c))
+            else:
+                if neighbors_on == 3:
+                    new_lights.add((r, c))
 
-    count = 0
-    for row in grid:
-        for cell in row:
-            if cell == '#':
-                count += 1
+        lights = new_lights
 
-    return count
+    return len(lights)
+

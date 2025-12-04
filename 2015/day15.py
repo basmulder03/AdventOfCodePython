@@ -52,11 +52,24 @@ def generate_combinations(num_ingredients, total_teaspoons):
 
 def solve_part_1(input_data):
     ingredients = parse_ingredients(input_data)
+    n = len(ingredients)
+
+    # Pre-compute property arrays for faster access
+    capacity = [ing['capacity'] for ing in ingredients]
+    durability = [ing['durability'] for ing in ingredients]
+    flavor = [ing['flavor'] for ing in ingredients]
+    texture = [ing['texture'] for ing in ingredients]
 
     max_score = 0
 
-    for amounts in generate_combinations(len(ingredients), 100):
-        score = calculate_score(ingredients, amounts)
+    for amounts in generate_combinations(n, 100):
+        # Inline score calculation for speed
+        c = max(0, sum(capacity[i] * amounts[i] for i in range(n)))
+        d = max(0, sum(durability[i] * amounts[i] for i in range(n)))
+        f = max(0, sum(flavor[i] * amounts[i] for i in range(n)))
+        t = max(0, sum(texture[i] * amounts[i] for i in range(n)))
+        score = c * d * f * t
+
         if score > max_score:
             max_score = score
 
@@ -64,11 +77,31 @@ def solve_part_1(input_data):
 
 def solve_part_2(input_data):
     ingredients = parse_ingredients(input_data)
+    n = len(ingredients)
+
+    # Pre-compute property arrays for faster access
+    capacity = [ing['capacity'] for ing in ingredients]
+    durability = [ing['durability'] for ing in ingredients]
+    flavor = [ing['flavor'] for ing in ingredients]
+    texture = [ing['texture'] for ing in ingredients]
+    calories_arr = [ing['calories'] for ing in ingredients]
+
     max_score = 0
 
-    for amounts in generate_combinations(len(ingredients), 100):
-        score, calories = calculate_score(ingredients, amounts, include_calories=True)
-        if calories == 500 and score > max_score:
+    for amounts in generate_combinations(n, 100):
+        # Check calories first (early exit)
+        cal = sum(calories_arr[i] * amounts[i] for i in range(n))
+        if cal != 500:
+            continue
+
+        # Inline score calculation for speed
+        c = max(0, sum(capacity[i] * amounts[i] for i in range(n)))
+        d = max(0, sum(durability[i] * amounts[i] for i in range(n)))
+        f = max(0, sum(flavor[i] * amounts[i] for i in range(n)))
+        t = max(0, sum(texture[i] * amounts[i] for i in range(n)))
+        score = c * d * f * t
+
+        if score > max_score:
             max_score = score
 
     return max_score

@@ -27,13 +27,16 @@ def solve_part_1(input_data: str) -> Any:
     # Total code number (1-indexed)
     code_number = codes_before_diagonal + position_in_diagonal
 
-    # Generate the code
+    # Generate the code using modular exponentiation
     # First code is 20151125
-    # Each subsequent code: (previous * 252533) % 33554393
-    code = 20151125
+    # code_n = (20151125 * 252533^(n-1)) % 33554393
+    # This is much faster than iterating
+    multiplier = 252533
+    modulo = 33554393
+    first_code = 20151125
 
-    for i in range(1, code_number):
-        code = (code * 252533) % 33554393
+    # Calculate: first_code * multiplier^(code_number - 1) mod modulo
+    code = (first_code * pow(multiplier, code_number - 1, modulo)) % modulo
 
     return code
 
