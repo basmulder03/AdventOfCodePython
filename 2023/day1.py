@@ -32,7 +32,7 @@ def solve_part_2(input_data):
                     digits.append(digit)
                     break
         if (len(digits) != 0):
-            total_value += int(digits[] + digits[-1])
+            total_value += int(digits[0] + digits[-1])
     return total_value
     pass
                 
