@@ -5,31 +5,31 @@
 ## Year Summary
 
 - ⭐ **Stars**: 50
-- 🧩 **Problems Solved**: 8
-- 🏃 **Total Runs**: 141 (57.4% success)
-- ⚡ **Average Time**: 63.7ms
+- 🧩 **Problems Solved**: 13
+- 🏃 **Total Runs**: 281 (68.0% success)
+- ⚡ **Average Time**: 61.9ms
 - 🚀 **Fastest Time**: 0.2μs
-- 🐌 **Slowest Time**: 507.2ms
+- 🐌 **Slowest Time**: 712.2ms
 
 ## 💻 System Information
 
 - **OS**: Windows 11
-- **Python**: 3.12.10
-- **Processor**: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
-- **CPU Cores**: 24
+- **Python**: 3.13.9
+- **Processor**: Intel64 Family 6 Model 186 Stepping 2, GenuineIntel
+- **CPU Cores**: 20
 
 ## Performance by Day
 
 | Day | Part 1 | Part 2 | Total | Status |
 |-----|--------|--------|-------|--------|
 |  1 |       — |       — |       — | ⭐⭐ |
-|  2 |       — |       — |       — | ⭐⭐ |
+|  2 | 200.0μs | 362.7μs | 562.7μs | ⭐⭐ |
 |  3 |   3.5ms |   5.4ms |   8.8ms | ⭐⭐ |
-|  4 |       — |       — |       — | ⭐⭐ |
+|  4 | 939.3μs |       — | 939.3μs | ⭐⭐ |
 |  5 |       — |       — |       — | ⭐⭐ |
 |  6 |  12.3μs | 500.2ms | 500.2ms | ⭐⭐ |
 |  7 |   1.5ms |   2.1ms |   3.6ms | ⭐⭐ |
-|  8 |       — |       — |       — | ⭐⭐ |
+|  8 |   1.7ms |  10.7ms |  12.4ms | ⭐⭐ |
 |  9 |       — |       — |       — | ⭐⭐ |
 | 10 |       — |       — |       — | ⭐⭐ |
 | 11 |       — |       — |       — | ⭐⭐ |
@@ -50,8 +50,8 @@
 
 ## Performance Distribution
 
-- 🚀 **Fast** (< 10ms): 7 problems
-- ⚡ **Medium** (10ms - 1s): 1 problems
+- 🚀 **Fast** (< 10ms): 11 problems
+- ⚡ **Medium** (10ms - 1s): 2 problems
 - 🐌 **Slow** (≥ 1s): 0 problems
 
-*Last updated: 2025-12-03 22:00:53*
+*Last updated: 2025-12-04 08:32:38*

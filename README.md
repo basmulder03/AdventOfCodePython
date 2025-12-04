@@ -70,24 +70,24 @@ python main.py --update-markdown --markdown-all
 
 | Year | Stars ⭐ | Problems 🧩 | Runs 🏃 | Success Rate | Avg Time ⚡ | Fastest 🚀 | Slowest 🐌 |
 |------|----------|-------------|---------|--------------|-------------|------------|------------|
-| [2025](./docs/2025-results.md) | 8 | 8 | 113 | 97.3% | 118.4ms | 108.6μs | 771.9ms |
-| [2024](./docs/2024-results.md) | 50 | 2 | 21 | 100.0% | 15.9μs | 0.3μs | 320.0μs |
-| [2023](./docs/2023-results.md) | 50 | 8 | 141 | 57.4% | 63.7ms | 0.2μs | 507.2ms |
-| [2022](./docs/2022-results.md) | 50 | 2 | 21 | 100.0% | 15.7μs | 0.3μs | 317.2μs |
-| [2021](./docs/2021-results.md) | 6 | 6 | 70 | 85.7% | 399.6μs | 192.7μs | 1.1ms |
-| [2017](./docs/2017-results.md) | 4 | 4 | 20 | 100.0% | 474.0μs | 101.4μs | 1.5ms |
-| [2016](./docs/2016-results.md) | 50 | 50 | 1102 | 99.7% | 1.43s | 0.1μs | 21.58s |
-| [2015](./docs/2015-results.md) | 50 | 50 | 1104 | 95.5% | 325.6ms | 0.2μs | 11.54s |
+| [2025](./docs/2025-results.md) | 8 | 8 | 195 | 98.5% | 144.7ms | 108.6μs | 771.9ms |
+| [2024](./docs/2024-results.md) | 50 | 2 | 41 | 100.0% | 9.1μs | 0.2μs | 320.0μs |
+| [2023](./docs/2023-results.md) | 50 | 13 | 281 | 68.0% | 61.9ms | 0.2μs | 712.2ms |
+| [2022](./docs/2022-results.md) | 50 | 2 | 41 | 100.0% | 9.0μs | 0.3μs | 317.2μs |
+| [2021](./docs/2021-results.md) | 6 | 6 | 140 | 85.7% | 607.5μs | 192.7μs | 3.3ms |
+| [2017](./docs/2017-results.md) | 4 | 4 | 60 | 100.0% | 313.3μs | 48.0μs | 1.5ms |
+| [2016](./docs/2016-results.md) | 50 | 50 | 1602 | 99.7% | 1.49s | 0.1μs | 27.02s |
+| [2015](./docs/2015-results.md) | 50 | 50 | 1604 | 95.6% | 340.2ms | 0.2μs | 11.54s |
 
 ### Overall Totals
 - ⭐ **Total Stars**: 270
-- 🧩 **Total Problems Solved**: 130
-- 🏃 **Total Runs**: 2592 (95.1% success)
-- ⚡ **Average Time**: 784.2ms
+- 🧩 **Total Problems Solved**: 135
+- 🏃 **Total Runs**: 3964 (95.3% success)
+- ⚡ **Average Time**: 777.0ms
 - 🚀 **Fastest Time**: 0.1μs
-- 🐌 **Slowest Time**: 21.58s
+- 🐌 **Slowest Time**: 27.02s
 
-*Last updated: 2025-12-04 06:08:27*
+*Last updated: 2025-12-04 08:32:38*
 <!-- STATS_END -->
 
 ## 📋 Requirements
