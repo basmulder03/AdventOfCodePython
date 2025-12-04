@@ -282,11 +282,14 @@ class BenchmarkRunner:
             print(f"❌ Year {year} directory not found")
             return {}
 
-        # Find all day files
-        day_files = sorted([f for f in year_path.glob("day*.py")])
+        # Find all day files and sort by day number
+        day_files = [f for f in year_path.glob("day*.py")]
         if not day_files:
             print(f"❌ No solution files found in {year_path}")
             return {}
+
+        # Sort by day number (extract numeric part)
+        day_files = sorted(day_files, key=lambda f: int(f.stem.replace('day', '')))
 
         results = {}
 
@@ -312,9 +315,10 @@ class BenchmarkRunner:
 
     def benchmark_all(self, runs: int = 3, timeout: float = 30.0) -> Dict[int, Dict[int, Dict[int, BenchmarkStats]]]:
         """Benchmark all available solutions across all years."""
-        # Find all year directories
-        year_dirs = sorted([d for d in Path.cwd().iterdir()
-                          if d.is_dir() and d.name.isdigit()])
+        # Find all year directories and sort by year number
+        year_dirs = [d for d in Path.cwd().iterdir()
+                    if d.is_dir() and d.name.isdigit()]
+        year_dirs = sorted(year_dirs, key=lambda d: int(d.name))
 
         if not year_dirs:
             print("❌ No year directories found")
