@@ -70,24 +70,24 @@ python main.py --update-markdown --markdown-all
 
 | Year | Stars ⭐ | Problems 🧩 | Runs 🏃 | Success Rate | Avg Time ⚡ | Fastest 🚀 | Slowest 🐌 |
 |------|----------|-------------|---------|--------------|-------------|------------|------------|
-| [2025](./docs/2025-results.md) | 8 | 8 | 195 | 98.5% | 144.7ms | 0.1ms | 771.9ms |
-| [2024](./docs/2024-results.md) | 50 | 2 | 41 | 100.0% | 9.1μs | 0.2μs | 0.3ms |
-| [2023](./docs/2023-results.md) | 50 | 16 | 441 | 79.6% | 35.1ms | 0.2μs | 712.2ms |
-| [2022](./docs/2022-results.md) | 50 | 2 | 41 | 100.0% | 9.0μs | 0.3μs | 0.3ms |
-| [2021](./docs/2021-results.md) | 6 | 6 | 140 | 85.7% | 0.6ms | 0.2ms | 3.3ms |
-| [2017](./docs/2017-results.md) | 4 | 4 | 60 | 100.0% | 0.3ms | 48.0μs | 1.5ms |
-| [2016](./docs/2016-results.md) | 50 | 50 | 1602 | 99.7% | 1.49s | 0.1μs | 27.02s |
-| [2015](./docs/2015-results.md) | 50 | 50 | 1604 | 95.6% | 340.2ms | 0.2μs | 11.54s |
+| [2025](./docs/2025-results.md) | 8 | 8 | 275 | 98.9% | 156.2ms | 0.1ms | 937.8ms |
+| [2024](./docs/2024-results.md) | 50 | 2 | 61 | 100.0% | 6.7μs | 0.2μs | 0.3ms |
+| [2023](./docs/2023-results.md) | 50 | 16 | 601 | 85.0% | 24.9ms | 0.2μs | 712.2ms |
+| [2022](./docs/2022-results.md) | 50 | 2 | 61 | 100.0% | 6.9μs | 0.3μs | 0.3ms |
+| [2021](./docs/2021-results.md) | 6 | 6 | 210 | 85.7% | 0.7ms | 0.2ms | 3.3ms |
+| [2017](./docs/2017-results.md) | 4 | 4 | 100 | 100.0% | 0.3ms | 48.0μs | 1.5ms |
+| [2016](./docs/2016-results.md) | 50 | 50 | 2102 | 98.9% | 1.45s | 0.1μs | 28.77s |
+| [2015](./docs/2015-results.md) | 50 | 50 | 2104 | 95.7% | 345.9ms | 0.2μs | 11.54s |
 
 ### Overall Totals
 - ⭐ **Total Stars**: 270
 - 🧩 **Total Problems Solved**: 138
-- 🏃 **Total Runs**: 4124 (95.4% success)
-- ⚡ **Average Time**: 745.5ms
+- 🏃 **Total Runs**: 5514 (95.7% success)
+- ⚡ **Average Time**: 714.9ms
 - 🚀 **Fastest Time**: 0.1μs
-- 🐌 **Slowest Time**: 27.02s
+- 🐌 **Slowest Time**: 28.77s
 
-*Last updated: 2025-12-04 09:14:00*
+*Last updated: 2025-12-04 13:37:04*
 <!-- STATS_END -->
 
 ## 📋 Requirements

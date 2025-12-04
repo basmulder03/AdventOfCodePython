@@ -6,10 +6,10 @@
 
 - ⭐ **Stars**: 50
 - 🧩 **Problems Solved**: 50
-- 🏃 **Total Runs**: 1602 (99.7% success)
-- ⚡ **Average Time**: 1.49s
+- 🏃 **Total Runs**: 2102 (98.9% success)
+- ⚡ **Average Time**: 1.45s
 - 🚀 **Fastest Time**: 0.1μs
-- 🐌 **Slowest Time**: 27.02s
+- 🐌 **Slowest Time**: 28.77s
 
 ## 💻 System Information
 
@@ -37,7 +37,7 @@
 | 13 |   0.3ms |   0.1ms |   0.5ms | ⭐⭐ |
 | 14 |   1.44s |  19.74s |  21.18s | ⭐⭐ |
 | 15 |  23.6ms | 277.2ms | 300.8ms | ⭐⭐ |
-| 16 |  14.3μs |   9.74s |   9.74s | ⭐⭐ |
+| 16 |  14.3μs |   7.25s |   7.25s | ⭐⭐ |
 | 17 |  38.4μs |  44.6ms |  44.6ms | ⭐⭐ |
 | 18 |   0.5ms |   5.11s |   5.11s | ⭐⭐ |
 | 19 |   1.5μs |   1.0μs |   2.5μs | ⭐⭐ |
@@ -46,12 +46,12 @@
 | 22 |  42.6ms |   0.8ms |  43.4ms | ⭐⭐ |
 | 23 |   9.5ms |   0.4μs |   9.5ms | ⭐⭐ |
 | 24 |  77.4ms |  78.2ms | 155.6ms | ⭐⭐ |
-| 25 |   9.82s |   0.1μs |   9.82s | ⭐⭐ |
+| 25 |  14.1ms |   0.1μs |  14.1ms | ⭐⭐ |
 
 ## Performance Distribution
 
 - 🚀 **Fast** (< 10ms): 33 problems
-- ⚡ **Medium** (10ms - 1s): 9 problems
-- 🐌 **Slow** (≥ 1s): 8 problems
+- ⚡ **Medium** (10ms - 1s): 10 problems
+- 🐌 **Slow** (≥ 1s): 7 problems
 
-*Last updated: 2025-12-04 08:39:37*
+*Last updated: 2025-12-04 13:37:04*
