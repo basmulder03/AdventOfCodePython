@@ -360,15 +360,10 @@ For more examples: python benchmarking/quick.py --examples
                 tracker.record_submission(year, day, part, str(answer), 'correct', message)
 
             # Refresh puzzle HTML after successful submission to get updated content (e.g., part 2)
-            print(f"🔄 Refreshing puzzle HTML to get latest content...")
             try:
-                puzzle_dir = submitter.download_puzzle_html(year, day)
-                if puzzle_dir:
-                    print(f"✅ Puzzle HTML refreshed successfully")
-                else:
-                    print(f"⚠️  Warning: Failed to refresh puzzle HTML")
-            except Exception as e:
-                print(f"⚠️  Warning: Failed to refresh puzzle HTML: {e}")
+                submitter.download_puzzle_html(year, day)
+            except:
+                pass
 
         elif status == 'timeout' or wait_time > 0:
             print(f"⏰ {message}")
