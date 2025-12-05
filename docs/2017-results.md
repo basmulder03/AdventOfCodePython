@@ -6,9 +6,9 @@
 
 - ⭐ **Stars**: 4
 - 🧩 **Problems Solved**: 50
-- 🏃 **Total Runs**: 587 (99.3% success)
-- ⚡ **Average Time**: 475.2ms
-- 🚀 **Fastest Time**: 19.5μs
+- 🏃 **Total Runs**: 652 (99.4% success)
+- ⚡ **Average Time**: 541.7ms
+- 🚀 **Fastest Time**: 0.8μs
 - 🐌 **Slowest Time**: 8.28s
 
 ## 💻 System Information
@@ -44,14 +44,14 @@
 | 20 |   1.7ms | 303.2ms | 304.8ms | ☆☆ |
 | 21 |   0.9ms |   1.45s |   1.45s | ☆☆ |
 | 22 |   1.5ms |   2.00s |   2.00s | ☆☆ |
-| 23 |  19.2ms |   0.9ms |  20.1ms | ☆☆ |
-| 24 |   2.56s |   3.18s |   5.75s | ☆☆ |
-| 25 |   1.18s |   0.3ms |   1.18s | ☆☆ |
+| 23 |  15.8ms |   0.6ms |  16.4ms | ☆☆ |
+| 24 |   2.42s |   2.66s |   5.08s | ☆☆ |
+| 25 | 994.8ms |   0.8μs | 994.8ms | ☆☆ |
 
 ## Performance Distribution
 
-- 🚀 **Fast** (< 10ms): 32 problems
-- ⚡ **Medium** (10ms - 1s): 9 problems
-- 🐌 **Slow** (≥ 1s): 9 problems
+- 🚀 **Fast** (< 10ms): 36 problems
+- ⚡ **Medium** (10ms - 1s): 10 problems
+- 🐌 **Slow** (≥ 1s): 8 problems
 
-*Last updated: 2025-12-05 15:38:51*
+*Last updated: 2025-12-05 15:40:24*

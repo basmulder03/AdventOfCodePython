@@ -75,19 +75,19 @@ python main.py --update-markdown --markdown-all
 | [2023](./docs/2023-results.md) | 50 | 16 | 601 | 85.0% | 24.9ms | 0.2μs | 712.2ms |
 | [2022](./docs/2022-results.md) | 50 | 2 | 61 | 100.0% | 6.9μs | 0.3μs | 0.3ms |
 | [2021](./docs/2021-results.md) | 6 | 6 | 210 | 85.7% | 0.7ms | 0.2ms | 3.3ms |
-| [2017](./docs/2017-results.md) | 4 | 50 | 587 | 99.3% | 475.2ms | 19.5μs | 8.28s |
+| [2017](./docs/2017-results.md) | 4 | 50 | 652 | 99.4% | 541.7ms | 0.8μs | 8.28s |
 | [2016](./docs/2016-results.md) | 50 | 50 | 2102 | 98.9% | 1.45s | 0.1μs | 28.77s |
 | [2015](./docs/2015-results.md) | 50 | 50 | 2104 | 95.7% | 345.9ms | 0.2μs | 11.54s |
 
 ### Overall Totals
 - ⭐ **Total Stars**: 272
 - 🧩 **Total Problems Solved**: 186
-- 🏃 **Total Runs**: 6016 (96.0% success)
-- ⚡ **Average Time**: 701.3ms
+- 🏃 **Total Runs**: 6081 (96.0% success)
+- ⚡ **Average Time**: 706.2ms
 - 🚀 **Fastest Time**: 0.1μs
 - 🐌 **Slowest Time**: 28.77s
 
-*Last updated: 2025-12-05 15:38:51*
+*Last updated: 2025-12-05 15:40:24*
 <!-- STATS_END -->
 
 ## 📋 Requirements

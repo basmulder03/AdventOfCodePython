@@ -14,19 +14,19 @@ def solve_part_1(input_data):
             s -= 1
         elif direction == 'ne':
             q += 1
-            s -= 1
+            r -= 1
         elif direction == 'sw':
             q -= 1
-            s += 1
+            r += 1
         elif direction == 'nw':
             q -= 1
-            r += 1
+            s += 1
         elif direction == 'se':
             q += 1
-            r -= 1
+            s -= 1
 
-    # Distance is maximum of absolute coordinates
-    return max(abs(q), abs(r), abs(s))
+    # Distance in cube coordinates is (|q| + |r| + |s|) / 2
+    return (abs(q) + abs(r) + abs(s)) // 2
 
 
 def solve_part_2(input_data):
@@ -45,19 +45,19 @@ def solve_part_2(input_data):
             s -= 1
         elif direction == 'ne':
             q += 1
-            s -= 1
+            r -= 1
         elif direction == 'sw':
             q -= 1
-            s += 1
+            r += 1
         elif direction == 'nw':
             q -= 1
-            r += 1
+            s += 1
         elif direction == 'se':
             q += 1
-            r -= 1
+            s -= 1
 
         # Calculate current distance
-        distance = max(abs(q), abs(r), abs(s))
+        distance = (abs(q) + abs(r) + abs(s)) // 2
         max_distance = max(max_distance, distance)
 
     return max_distance
