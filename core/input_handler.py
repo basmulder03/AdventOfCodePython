@@ -4,6 +4,7 @@ Input handling functionality for Advent of Code solutions.
 import os
 import requests
 from datetime import datetime, timezone
+from .year_config import get_max_day
 
 
 def is_input_available(year: int, day: int) -> bool:
@@ -12,7 +13,8 @@ def is_input_available(year: int, day: int) -> bool:
     Input becomes available at 5 AM UTC on each day in December.
     """
     # Check for valid AOC date range
-    if not (1 <= day <= 25) or year < 2015:
+    max_day = get_max_day(year)
+    if not (1 <= day <= max_day) or year < 2015:
         return False
 
     try:

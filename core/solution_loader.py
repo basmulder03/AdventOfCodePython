@@ -5,6 +5,7 @@ import importlib.util
 from pathlib import Path
 from typing import Any
 from .input_handler import InputHandler, is_input_available
+from .year_config import is_last_day, get_expected_parts
 
 
 class SolutionLoader:
@@ -52,8 +53,9 @@ class SolutionLoader:
                 "    pass\n"
             )
 
-            # Day 25 traditionally only has one part in Advent of Code
-            if day != 25:
+            # The last day traditionally only has one part in Advent of Code
+            expected_parts = get_expected_parts(year, day)
+            if 2 in expected_parts:
                 template += (
                     "\n\n"
                     "def solve_part_2(input_data: str) -> Any:\n"
@@ -63,7 +65,7 @@ class SolutionLoader:
             else:
                 template += (
                     "\n\n"
-                    "# Note: Day 25 traditionally only has one part in Advent of Code\n"
+                    f"# Note: Day {day} is the last day and traditionally only has one part\n"
                     "# You get the second star for free after completing all other days!\n"
                 )
 

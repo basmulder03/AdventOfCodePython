@@ -6,17 +6,22 @@ This package contains the fundamental components needed to run AOC solutions:
 - Solution loading and execution
 - Tracking and database operations
 - Submission handling
+- Year-specific configuration
 """
 
 from .input_handler import InputHandler, is_input_available
 from .solution_loader import SolutionLoader
 from .tracker import AOCTracker
 from .submitter import AOCSubmitter
+from .year_config import get_max_day, is_last_day, get_expected_parts
 
 __all__ = [
     'InputHandler',
     'is_input_available',
     'SolutionLoader',
     'AOCTracker',
-    'AOCSubmitter'
+    'AOCSubmitter',
+    'get_max_day',
+    'is_last_day',
+    'get_expected_parts'
 ]

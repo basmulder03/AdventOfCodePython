@@ -5,6 +5,7 @@ import re
 import requests
 from pathlib import Path
 from typing import List, Tuple
+from .year_config import get_max_day
 
 try:
     from bs4 import BeautifulSoup
@@ -165,13 +166,21 @@ class AOCSubmitter:
             print(f"Error parsing problem page: {e}")
             return [], {}
 
-    def sync_completed_problems(self, year: int, start_day: int = 1, end_day: int = 25) -> dict:
+    def sync_completed_problems(self, year: int, start_day: int = 1, end_day: int = None) -> dict:
         """
         Sync completed problems for a given year.
+
+        Args:
+            year: The AOC year
+            start_day: Starting day number (default: 1)
+            end_day: Ending day number (default: None, uses max day for the year)
 
         Returns:
             Dict with day numbers as keys and completion info as values
         """
+        if end_day is None:
+            end_day = get_max_day(year)
+
         sync_results = {}
 
         for day in range(start_day, end_day + 1):
