@@ -13,7 +13,7 @@ from .input_handler import InputHandler, is_input_available
 from .solution_loader import SolutionLoader
 from .tracker import AOCTracker
 from .submitter import AOCSubmitter
-from .year_config import get_max_day, is_last_day, get_expected_parts
+from .year_config import get_max_day, is_last_day, get_expected_parts, get_required_stars_for_last_day_part2
 
 __all__ = [
     'InputHandler',
@@ -23,5 +23,6 @@ __all__ = [
     'AOCSubmitter',
     'get_max_day',
     'is_last_day',
-    'get_expected_parts'
+    'get_expected_parts',
+    'get_required_stars_for_last_day_part2'
 ]

@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Optional, Tuple, Any
 import re
 
-from core import AOCTracker, AOCSubmitter, SolutionLoader, InputHandler
+from core import AOCTracker, AOCSubmitter, SolutionLoader, InputHandler, is_last_day, get_required_stars_for_last_day_part2
 from utils import DisplayFormatter, StatsGenerator, MarkdownGenerator
 from benchmarking import BenchmarkRunner
 
@@ -348,6 +348,12 @@ For more examples: python benchmarking/quick.py --examples
     def handle_submission(self, submitter: AOCSubmitter, tracker: Optional[AOCTracker],
                          year: int, day: int, part: int, answer: Any) -> None:
         """Handle answer submission to AOC."""
+        # Add a note for last day part 2 submissions
+        if part == 2 and is_last_day(year, day):
+            required_stars = get_required_stars_for_last_day_part2(year)
+            print(f"\n💡 Note: Day {day} Part 2 accepts any answer after you've earned {required_stars} stars.")
+            print(f"   If you haven't completed the other days yet, this submission may fail.")
+
         print(f"\n🚀 Submitting answer for {year} Day {day} Part {part}...")
 
         status, message, wait_time = submitter.submit_answer(year, day, part, str(answer))
