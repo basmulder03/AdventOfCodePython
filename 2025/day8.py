@@ -178,6 +178,11 @@ def create_animation(input_data: str):
     # Animation data
     connection_frames = []
     current_connections = []
+    component_color_map = {}  # Stable color mapping for components
+    next_color_index = 0
+
+    # Store original distances length for progress calculation
+    total_distances = len(distances)
 
     # Create frames for animation
     step_size = max(1, len(distances) // 50)  # Create ~50 frames
@@ -199,25 +204,34 @@ def create_animation(input_data: str):
                 current_connections.append((box_i, box_j))
                 new_connections_in_batch.append((box_i, box_j))
 
-        # Get current component information
+        # Get current component information with stable coloring
         components = defaultdict(list)
         for k in range(n):
             root = uf.find(k)
             components[root].append(k)
+
+        # Assign stable colors to new components
+        for root in components:
+            if root not in component_color_map:
+                component_color_map[root] = next_color_index
+                next_color_index += 1
 
         # Store frame data
         frame_data = {
             'connections': current_connections.copy(),
             'new_connections': new_connections_in_batch,
             'components': dict(components),
+            'component_colors': component_color_map.copy(),
             'step': i // step_size + 1,
             'total_steps': (len(distances) + step_size - 1) // step_size,
-            'progress': batch_end / len(distances)
+            'progress': batch_end / total_distances  # Use original total for correct progress
         }
         connection_frames.append(frame_data)
 
         # Check if all connected (early termination for part 2)
         if len(components) == 1:
+            # Add final frame with 100% progress
+            frame_data['progress'] = 1.0
             break
 
     # Animation function
@@ -231,20 +245,23 @@ def create_animation(input_data: str):
         connections = frame_data['connections']
         new_connections = frame_data['new_connections']
         components = frame_data['components']
+        component_colors = frame_data['component_colors']
 
-        # Color palette for components
-        colors = plt.cm.Set3(np.linspace(0, 1, len(components)))
+        # Color palette for components - use a stable colormap
+        max_colors = max(component_colors.values()) + 1 if component_colors else 1
+        colors = plt.cm.Set3(np.linspace(0, 1, max_colors))
 
-        # Plot boxes colored by component
-        for comp_idx, (root, members) in enumerate(components.items()):
-            color = colors[comp_idx % len(colors)]
+        # Plot boxes colored by component using stable color mapping
+        for root, members in components.items():
+            color_idx = component_colors[root]
+            color = colors[color_idx % len(colors)]
             comp_xs = [xs[i] for i in members]
             comp_ys = [ys[i] for i in members]
             comp_zs = [zs[i] for i in members]
 
             ax.scatter(comp_xs, comp_ys, comp_zs,
                       c=[color], s=100, alpha=0.8,
-                      label=f'Component {comp_idx + 1} ({len(members)} boxes)')
+                      label=f'Component {color_idx + 1} ({len(members)} boxes)')
 
         # Draw all connections in light gray
         for box_i, box_j in connections:
