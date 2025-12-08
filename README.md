@@ -70,9 +70,9 @@ python main.py --update-markdown --markdown-all
 
 | Year | Stars ⭐ | Problems 🧩 | Runs 🏃 | Success Rate | Avg Time ⚡ | Fastest 🚀 | Slowest 🐌 |
 |------|----------|-------------|---------|--------------|-------------|------------|------------|
-| [2025](./docs/2025-results.md) | 14 | 14 | 362 | 98.9% | 119.4ms | 0.1ms | 937.8ms |
+| [2025](./docs/2025-results.md) | 16 | 16 | 397 | 98.7% | 137.3ms | 0.1ms | 937.8ms |
 | [2024](./docs/2024-results.md) | 50 | 2 | 61 | 100.0% | 6.7μs | 0.2μs | 0.3ms |
-| [2023](./docs/2023-results.md) | 50 | 16 | 601 | 85.0% | 24.9ms | 0.2μs | 712.2ms |
+| [2023](./docs/2023-results.md) | 50 | 15 | 603 | 77.9% | 27.1ms | 0.4μs | 712.2ms |
 | [2022](./docs/2022-results.md) | 50 | 2 | 61 | 100.0% | 6.9μs | 0.3μs | 0.3ms |
 | [2021](./docs/2021-results.md) | 6 | 6 | 210 | 85.7% | 0.7ms | 0.2ms | 3.3ms |
 | [2017](./docs/2017-results.md) | 49 | 50 | 1217 | 89.0% | 663.3ms | 0.6μs | 8.36s |
@@ -80,14 +80,14 @@ python main.py --update-markdown --markdown-all
 | [2015](./docs/2015-results.md) | 50 | 50 | 2104 | 95.7% | 345.9ms | 0.2μs | 11.54s |
 
 ### Overall Totals
-- ⭐ **Total Stars**: 321
-- 🧩 **Total Problems Solved**: 190
-- 🏃 **Total Runs**: 6718 (94.5% success)
-- ⚡ **Average Time**: 707.7ms
+- ⭐ **Total Stars**: 323
+- 🧩 **Total Problems Solved**: 191
+- 🏃 **Total Runs**: 6755 (93.8% success)
+- ⚡ **Average Time**: 710.2ms
 - 🚀 **Fastest Time**: 0.1μs
 - 🐌 **Slowest Time**: 28.77s
 
-*Last updated: 2025-12-07 06:18:58*
+*Last updated: 2025-12-08 06:33:18*
 <!-- STATS_END -->
 
 ## 📋 Requirements
