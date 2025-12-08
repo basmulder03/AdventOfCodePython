@@ -11,7 +11,7 @@ class ArgumentParser:
     def setup_parser(self) -> argparse.ArgumentParser:
         """Set up and return the command line argument parser."""
         # Check if first argument is a known subcommand
-        subcommands = ['sync', 'benchmark', 'stats', 'markdown']
+        subcommands = ['sync', 'benchmark', 'stats', 'markdown', 'animation']
         has_subcommand = len(sys.argv) > 1 and sys.argv[1] in subcommands
 
         if has_subcommand:
@@ -72,6 +72,10 @@ Examples:
                            help="expected output value for part 1")
         parser.add_argument("--expected-p2", type=str,
                            help="expected output value for part 2")
+        parser.add_argument("--animation", action="store_true",
+                           help="run animation if available for this solution")
+        parser.add_argument("--export-gif", type=str, metavar="FILENAME",
+                           help="export animation as GIF to specified filename (requires --animation)")
 
         return parser
 
@@ -158,5 +162,20 @@ Examples:
         markdown_parser.add_argument('day_pos', type=int, nargs='?', help='Day for markdown update')
         markdown_parser.add_argument("--no-tracking", action="store_true",
                                     help="disable run tracking and performance comparison")
+
+        # ANIMATION subcommand
+        animation_parser = subparsers.add_parser('animation', help='Run animations for solutions')
+        animation_parser.add_argument('year', type=int, help='Year of the problem')
+        animation_parser.add_argument('day', type=int, help='Day of the problem')
+        animation_parser.add_argument("--sample", "-s", action="store_true",
+                                     help="use sample input instead of actual input")
+        animation_parser.add_argument("--sample-input", type=str,
+                                     help="provide sample input directly as a string (implies --sample)")
+        animation_parser.add_argument("--export-gif", type=str, metavar="FILENAME",
+                                     help="export animation as GIF to specified filename")
+        animation_parser.add_argument("--speed", type=float, default=1.0,
+                                     help="animation speed multiplier (default: 1.0)")
+        animation_parser.add_argument("--no-tracking", action="store_true",
+                                     help="disable run tracking and performance comparison")
 
         return parser

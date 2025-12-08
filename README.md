@@ -9,6 +9,7 @@ A comprehensive solution runner for [Advent of Code](https://adventofcode.com/) 
 - 🚀 **Auto Submission**: Submit answers directly to AOC with smart timeout handling
 - 📈 **Statistics**: Generate comprehensive stats tables from tracked data
 - 🎯 **Sample Input Support**: Test with sample data or custom input strings
+- 🎬 **Algorithm Animations**: Interactive 3D visualizations with matplotlib and GIF export capabilities
 - 📝 **Template Generation**: Auto-create solution templates for new problems
 - 🎨 **Colorized Output**: Beautiful terminal output with progress indicators
 
@@ -37,6 +38,7 @@ A comprehensive solution runner for [Advent of Code](https://adventofcode.com/) 
 - **[✍️ Solution Writing Guide](docs/solution-guide.md)** - How to write effective solutions
 - **[📊 Performance Tracking](docs/tracking.md)** - Understanding the tracking system
 - **[🏃 Benchmarking](docs/benchmarking.md)** - Performance analysis tools
+- **[🎬 Algorithm Animations](docs/animation.md)** - Create and export animated visualizations
 - **[📈 Statistics](docs/statistics.md)** - Statistics generation and analysis
 - **[📝 Markdown Generation](docs/markdown-generation.md)** - Auto-generate documentation from benchmarks
 - **[🏗️ Project Structure](docs/project-structure.md)** - Understanding the codebase
@@ -55,6 +57,12 @@ python main.py 2025 1 --submit
 
 # Show run history
 python main.py 2025 1 --history
+
+# Interactive 3D animation (if available)
+python main.py 2025 8 --animation --sample
+
+# Export 3D animation as GIF
+python main.py animation 2025 8 --sample --export-gif my_3d_animation.gif
 
 # Benchmark and auto-update documentation
 python main.py 2025 1 --benchmark --benchmark-publish
@@ -94,6 +102,8 @@ python main.py --update-markdown --markdown-all
 
 - Python 3.7+
 - `requests` (for AOC communication)
+- `matplotlib` (for 3D animations)
+- `Pillow` (for GIF export)
 - `colorama` (optional, for colored output)
 
 ## 📄 License

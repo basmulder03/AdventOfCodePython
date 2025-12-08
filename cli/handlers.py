@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Optional, Tuple, Any
 import re
 
-from core import AOCTracker, AOCSubmitter, SolutionLoader, InputHandler, is_last_day, get_required_stars_for_last_day_part2
+from core import AOCTracker, AOCSubmitter, SolutionLoader, InputHandler, is_last_day, get_required_stars_for_last_day_part2, has_animation, run_animation
 from utils import DisplayFormatter, StatsGenerator, MarkdownGenerator
 from benchmarking import BenchmarkRunner
 
@@ -385,3 +385,54 @@ For more examples: python benchmarking/quick.py --examples
             # Record failed submission
             if tracker:
                 tracker.record_submission(year, day, part, str(answer), 'incorrect', message)
+
+    def handle_animation(self, year: int, day: int, sample: bool = False,
+                        sample_input: Optional[str] = None, speed: float = 1.0,
+                        export_gif: Optional[str] = None) -> None:
+        """Handle animation execution for a specific problem."""
+        try:
+            module = self.solution_loader.load_solution_module(year, day)
+        except FileNotFoundError as e:
+            print(str(e))
+            return
+
+        # Check if animation is available
+        if not has_animation(module):
+            print(f"❌ No animation available for {year} Day {day}")
+            print("   Animations require the solution file to have a 'create_animation' function")
+            return
+
+        # Get input data
+        if sample_input:
+            input_data = sample_input.encode().decode('unicode_escape')
+        else:
+            input_data = self.input_handler.get_input(year, day, sample)
+
+        # Print header
+        is_sample = sample or bool(sample_input)
+        title = f"🎬 Animation: {year} Day {day}" + (" (Sample)" if is_sample else "")
+        print("=" * len(title))
+        print(title)
+        print("=" * len(title))
+        print()
+
+        if export_gif:
+            print(f"📹 Will export animation to: {export_gif}")
+            print()
+
+        print("🎮 Press Ctrl+C to stop the animation")
+        print()
+
+        # Run the animation
+        try:
+            animation = run_animation(module, input_data, speed, export_gif)
+
+            if animation:
+                print("\n✅ Animation completed!")
+            else:
+                print("\n❌ Animation failed to run")
+        except KeyboardInterrupt:
+            print("\n🛑 Animation stopped by user")
+        except Exception as e:
+            print(f"\n❌ Animation error: {e}")
+

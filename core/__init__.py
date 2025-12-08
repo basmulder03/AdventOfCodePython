@@ -14,6 +14,7 @@ from .solution_loader import SolutionLoader
 from .tracker import AOCTracker
 from .submitter import AOCSubmitter
 from .year_config import get_max_day, is_last_day, get_expected_parts, get_required_stars_for_last_day_part2
+from .animation import Animation, AnimationFrame, has_animation, run_animation
 
 __all__ = [
     'InputHandler',
@@ -24,5 +25,9 @@ __all__ = [
     'get_max_day',
     'is_last_day',
     'get_expected_parts',
-    'get_required_stars_for_last_day_part2'
+    'get_required_stars_for_last_day_part2',
+    'Animation',
+    'AnimationFrame',
+    'has_animation',
+    'run_animation'
 ]

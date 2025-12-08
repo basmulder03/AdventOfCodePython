@@ -158,6 +158,20 @@ def main() -> None:
 
         return
 
+    # ANIMATION command
+    if command == 'animation':
+        year = args.year
+        day = args.day
+
+        # Get input parameters
+        sample = args.sample or bool(args.sample_input)
+        sample_input = args.sample_input
+        speed = args.speed
+        export_gif = args.export_gif
+
+        handlers.handle_animation(year, day, sample, sample_input, speed, export_gif)
+        return
+
     # If we get here, it's the default run command (no subcommand specified)
 
     # Show history if requested
@@ -251,6 +265,34 @@ def main() -> None:
         expected_values[1] = args.expected_p1
     if hasattr(args, 'expected_p2') and args.expected_p2:
         expected_values[2] = args.expected_p2
+
+    # Check for animation request
+    if args.animation:
+        from core import has_animation, run_animation
+
+        if has_animation(module):
+            print("\n🎬 Running animation...")
+            print("🎮 Press Ctrl+C to stop the animation")
+            print()
+
+            try:
+                speed = 1.0  # Default speed
+                export_gif = args.export_gif if hasattr(args, 'export_gif') else None
+
+                animation = run_animation(module, input_data, speed, export_gif)
+
+                if animation:
+                    print("\n✅ Animation completed!")
+                else:
+                    print("\n❌ Animation failed to run")
+            except KeyboardInterrupt:
+                print("\n🛑 Animation stopped by user")
+            except Exception as e:
+                print(f"\n❌ Animation error: {e}")
+        else:
+            print(f"❌ No animation available for {args.year} Day {args.day}")
+            print("   Animations require the solution file to have a 'create_animation' function")
+        return
 
     # Run the determined parts
     for part_num in parts_to_run:
