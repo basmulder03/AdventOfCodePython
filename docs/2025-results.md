@@ -4,19 +4,19 @@
 
 ## Year Summary
 
-- ⭐ **Stars**: 16
-- 🧩 **Problems Solved**: 16
-- 🏃 **Total Runs**: 397 (98.7% success)
-- ⚡ **Average Time**: 137.3ms
+- ⭐ **Stars**: 17
+- 🧩 **Problems Solved**: 18
+- 🏃 **Total Runs**: 430 (98.1% success)
+- ⚡ **Average Time**: 340.6ms
 - 🚀 **Fastest Time**: 0.1ms
-- 🐌 **Slowest Time**: 937.8ms
+- 🐌 **Slowest Time**: 7.88s
 
 ## 💻 System Information
 
 - **OS**: Windows 11
-- **Python**: 3.12.10
-- **Processor**: Intel64 Family 6 Model 183 Stepping 1, GenuineIntel
-- **CPU Cores**: 24
+- **Python**: 3.13.9
+- **Processor**: Intel64 Family 6 Model 186 Stepping 2, GenuineIntel
+- **CPU Cores**: 20
 
 ## Performance by Day
 
@@ -30,11 +30,12 @@
 |  6 |   4.0ms |   3.8ms |   7.8ms | ⭐⭐ |
 |  7 |   1.7ms |   1.6ms |   3.3ms | ⭐⭐ |
 |  8 |   0.4ms |   0.1ms |   0.5ms | ⭐⭐ |
+|  9 |  20.1ms | 321.9ms | 342.1ms | ☆⭐ |
 
 ## Performance Distribution
 
 - 🚀 **Fast** (< 10ms): 14 problems
-- ⚡ **Medium** (10ms - 1s): 2 problems
+- ⚡ **Medium** (10ms - 1s): 4 problems
 - 🐌 **Slow** (≥ 1s): 0 problems
 
-*Last updated: 2025-12-08 06:33:18*
+*Last updated: 2025-12-09 08:15:19*
