@@ -1,5 +1,7 @@
 from typing import Any
 import re
+import numpy as np
+from scipy.optimize import milp, LinearConstraint, Bounds
 
 
 def solve_part_1(input_data: str) -> Any:
@@ -34,7 +36,7 @@ def solve_gf2_system(buttons, target, num_lights):
     matrix = []
     for light_idx in range(num_lights):
         row = [buttons[button_idx][light_idx] for button_idx in range(num_buttons)]
-        row.append(target[light_idx])  # Augment with target
+        row.append(target[light_idx])
         matrix.append(row)
 
     pivot_col = 0
@@ -65,7 +67,7 @@ def solve_gf2_system(buttons, target, num_lights):
 
     for row in range(pivot_row, num_lights):
         if matrix[row][num_buttons] == 1:
-            return float('inf')  # No solution
+            return float('inf')
 
     free_vars = [i for i in range(num_buttons) if i not in pivot_cols]
 
@@ -120,8 +122,6 @@ def solve_part_2(input_data: str) -> Any:
 
 
 def solve_joltage_system(buttons, target, num_counters):
-    import numpy as np
-    from scipy.optimize import milp, LinearConstraint, Bounds
 
     num_buttons = len(buttons)
 
