@@ -85,7 +85,7 @@ python main.py --update-markdown --markdown-all
 | [2021](./docs/2021-results.md) | 6 | 6 | 210 | 85.7% | 0.7ms | 0.2ms | 3.3ms |
 | [2017](./docs/2017-results.md) | 49 | 50 | 1217 | 89.0% | 663.3ms | 0.6μs | 8.36s |
 | [2016](./docs/2016-results.md) | 50 | 50 | 2102 | 98.9% | 1.45s | 0.1μs | 28.77s |
-| [2015](./docs/2015-results.md) | 50 | 50 | 2104 | 95.7% | 345.9ms | 0.2μs | 11.54s |
+| [2015](./docs/2015-results.md) | 50 | 50 | 2105 | 95.7% | 345.8ms | 0.2μs | 11.54s |
 
 ### Overall Totals
 - ⭐ **Total Stars**: 331

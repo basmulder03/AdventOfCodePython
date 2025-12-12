@@ -1,5 +1,7 @@
+import numpy as np
+
+
 def solve_part_1(input_data):
-    import numpy as np
     matrix = np.zeros((1000, 1000), dtype=np.int8)
 
     for line in input_data.strip().split("\n"):
@@ -32,7 +34,6 @@ def solve_part_1(input_data):
 
 
 def solve_part_2(input_data):
-    import numpy as np
     matrix = np.zeros((1000, 1000), dtype=np.int32)
 
     for line in input_data.strip().split("\n"):

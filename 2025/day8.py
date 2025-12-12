@@ -1,5 +1,13 @@
 from typing import Any
 import math
+try:
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import matplotlib.animation as animation
+    from mpl_toolkits.mplot3d import Axes3D
+    ANIMATION_AVAILABLE = True
+except ImportError:
+    ANIMATION_AVAILABLE = False
 
 
 class UnionFind:
@@ -107,17 +115,13 @@ def solve_part_2(input_data: str) -> Any:
 
 def create_animation(input_data: str):
     """Create a 3D matplotlib animation visualizing the Union-Find algorithm."""
-    try:
-        import matplotlib.pyplot as plt
-        import matplotlib.animation as animation
-        from mpl_toolkits.mplot3d import Axes3D
-        import numpy as np
-        from collections import defaultdict
-    except ImportError as e:
-        print(f"❌ Required library not available for animation: {e}")
+    if not ANIMATION_AVAILABLE:
+        print("❌ Required libraries not available for animation")
         print("📋 Please install required packages:")
         print("   pip install matplotlib numpy")
         return None
+
+    from collections import defaultdict
 
     lines = input_data.strip().split('\n')
     boxes = []
